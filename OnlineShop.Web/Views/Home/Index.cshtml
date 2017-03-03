@@ -1,28 +1,17 @@
-﻿
-<div class="page-header">
-    <h2>eBay</h2>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div data-bind='simpleGrid: gridViewModel'> </div>
+﻿<h3>Tasks</h3>
 
-            <button data-bind='click: addItem'>
-                Add item
-            </button>
+<form data-bind="submit: addTask">
+    Add task: <input data-bind="value: newTaskText" placeholder="What needs to be done?" />
+    <button type="submit">Add</button>
+</form>
 
-            <button data-bind='click: sortByName'>
-                Sort by name
-            </button>
+<ul data-bind="foreach: tasks, visible: tasks().length > 0">
+    <li>
+        <input type="checkbox" data-bind="checked: isDone" />
+        <input data-bind="value: title, disable: isDone" />
+        <a href="#" data-bind="click: $parent.removeTask">Delete</a>
+    </li>
+</ul>
 
-            <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
-                Jump to first page
-            </button> 
-        </div>
-    </div>
-
-</div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/app")
-}
+You have <b data-bind="text: incompleteTasks().length">&nbsp;</b> incomplete task(s)
+<span data-bind="visible: incompleteTasks().length == 0"> - it's beer time!</span>

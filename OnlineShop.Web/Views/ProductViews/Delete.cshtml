@@ -1,0 +1,81 @@
+﻿@model OnlineShop.Models.Product
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ProductView</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.seller)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.seller)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.condition)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.condition)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemWebUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemWebUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.itemLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.itemLocation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EbayItemID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EbayItemID)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

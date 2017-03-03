@@ -128,6 +128,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProductViewsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -194,6 +195,9 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\ProductViews\Delete.cshtml" />
+    <Content Include="Views\ProductViews\Details.cshtml" />
+    <Content Include="Views\ProductViews\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -208,6 +212,10 @@
     <ProjectReference Include="..\OnlineShop.BL\OnlineShop.BL.csproj">
       <Project>{186b9bdc-d488-462a-b08d-674df079bc9c}</Project>
       <Name>OnlineShop.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OnlineShop.DL\OnlineShop.DL.csproj">
+      <Project>{cc6f738b-3eb2-4115-9849-aa8f59976ae4}</Project>
+      <Name>OnlineShop.DL</Name>
     </ProjectReference>
     <ProjectReference Include="..\OnlineShop.Models\OnlineShop.Models.csproj">
       <Project>{9eec8ae3-9ef9-4fa7-973e-7809a3fe99e1}</Project>

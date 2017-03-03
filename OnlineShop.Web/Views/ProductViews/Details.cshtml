@@ -1,0 +1,75 @@
+﻿@model OnlineShop.Models.Product
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ProductView</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.seller)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.seller)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.condition)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.condition)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ItemWebUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ItemWebUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Cost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.itemLocation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.itemLocation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EbayItemID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EbayItemID)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
