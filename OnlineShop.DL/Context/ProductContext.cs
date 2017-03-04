@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using OnlineShop.Models;
 
-namespace OnlineShop.DL.Context
+namespace OnlineShop.DL
 {
     public class ProductContext : DbContext
     {

@@ -1,11 +1,11 @@
-﻿using OnlineShop.DL.Context;
-using OnlineShop.Models;
+﻿using OnlineShop.Models;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace OnlineShop.DL.Repositories
+namespace OnlineShop.DL
 {
-    class ProductsRepository
+    public class ProductsRepository
     {
         private ProductContext _db;
 
@@ -36,9 +36,19 @@ namespace OnlineShop.DL.Repositories
             }
         }
 
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return _db.Products;
+        }
+
+        public IEnumerable<Product> GetProductsByCategory(int categoryId)
+        {
+            return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
+        }
+
         public Product GetProductById(int id)
         {
-            return _db.Products.FirstOrDefault(product => product.Id == id);
+            return _db.Products.FirstOrDefault(product => product.ItemID == id);
         }
 
         public void Save()

@@ -48,6 +48,10 @@
     <Compile Include="Services\Interfaces\IGrabService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OnlineShop.DL\OnlineShop.DL.csproj">
+      <Project>{cc6f738b-3eb2-4115-9849-aa8f59976ae4}</Project>
+      <Name>OnlineShop.DL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OnlineShop.Models\OnlineShop.Models.csproj">
       <Project>{9eec8ae3-9ef9-4fa7-973e-7809a3fe99e1}</Project>
       <Name>OnlineShop.Models</Name>

@@ -1,39 +1,63 @@
 ﻿using System.Web.Mvc;
-using OnlineShop.DL.Context;
+using OnlineShop.DL;
 using OnlineShop.Models;
+using System.Configuration;
+using OnlineShop.BL;
 
 namespace OnlineShop.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private ProductContext db = new ProductContext();
+        private GrabService grabService;
 
         public ActionResult Index()
         {
             return View();
         }
 
+
+        //[HttpGet]
+        //public ActionResult AddBook(int authorId)
+        //{
+        //    return View(new Book { AuthorId = authorId });
+        //}
+
+        //[HttpPost]
+        //public ActionResult AddBook(Book book)
+        //{
+        //    _bookService.AddBook(book);
+
+        //    return RedirectToAction("Index", new { authorId = book.AuthorId });
+        //}
+
         // GET: ProductViews/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult SaveProducts()
         {
-            return View();
+            return View("Products");
         }
 
-        // POST: ProductViews/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: ProductViews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Title,seller,condition,ItemWebUrl,Cost,itemLocation,EbayItemID")] Product productView)
+        public ActionResult SaveProducts(Product productView)
         {
             if (ModelState.IsValid)
             {
-                db.Products.Add(productView);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                // Get AppID and ServerAddress from Web.config
+                string appID = ConfigurationManager.AppSettings["AppID"];
+                string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
+                
+                //Take by QueryKeywords
+                //var url = findingServerAddress + "shopping?version=713&appid=" + appID + "&callname=FindPopularItems&QueryKeywords=" + productView.Title + "&ResponseEncodingType=JSON";
 
-            return View(productView);
+                //Take by categoryId
+                //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + productView.Title + "&ResponseEncodingType=JSON";
+
+                grabService.AddProduct(productView);
+                return RedirectToAction("Products");
+            }
+            return View();
         }
         
     }

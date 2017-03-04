@@ -6,7 +6,7 @@ namespace OnlineShop.BL.Services.Interfaces
 {
     interface IGrabService
     {
-        IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetAllProducts();
         IEnumerable<Product> GetProductsByCategory(string category);
     }
 }

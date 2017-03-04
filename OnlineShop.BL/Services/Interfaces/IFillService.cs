@@ -10,7 +10,7 @@ namespace OnlineShop.BL.Services.Interfaces
     interface IFillService
     {
         Product GetProductById(int id);
-        IEnumerable<Product> GetProducts();
 
+        IEnumerable<Product> GetAllProducts();
     }
 }

@@ -5,12 +5,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Items</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Title)
@@ -60,11 +57,31 @@
             @Html.DisplayFor(modelItem => item.EbayItemID)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })
         </td>
     </tr>
 }
 
-</table>
+</table>*@
+
+<script type="text/javascript">
+        $(function() {
+            var viewModel = ko.mapping.fromJS(@Html.Raw(Model.ToJson()));
+            ko.applyBindings(viewModel);
+          });
+</script>
+
+<div data-bind='simpleGrid: viewModel'> </div>
+
+<button data-bind='click: addItem'>
+    Add item
+</button>
+
+<button data-bind='click: sortByName'>
+    Sort by name
+</button>
+
+<button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
+    Jump to first page
+</button> 

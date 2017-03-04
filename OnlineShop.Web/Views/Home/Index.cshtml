@@ -1,17 +1,20 @@
-﻿<h3>Tasks</h3>
+﻿<p>
+    Category:
+    <select data-bind="options: topCategories,
+                       optionsText: 'name',
+                       value: selectedCategory,
+                       optionsCaption: 'Choose...'"></select>
+</p>
 
-<form data-bind="submit: addTask">
-    Add task: <input data-bind="value: newTaskText" placeholder="What needs to be done?" />
-    <button type="submit">Add</button>
-</form>
+<div data-bind="visible: selectedCategory">
+    You have chosen a Category with id
+    <span data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
+</div>
+<button data-bind='click: proceed'>Submit</button>
 
-<ul data-bind="foreach: tasks, visible: tasks().length > 0">
-    <li>
-        <input type="checkbox" data-bind="checked: isDone" />
-        <input data-bind="value: title, disable: isDone" />
-        <a href="#" data-bind="click: $parent.removeTask">Delete</a>
-    </li>
-</ul>
+@*<a href="#" data-bind="event: { click: $parent.navigateManageReturns }, text: OrderNo"></a>*@
 
-You have <b data-bind="text: incompleteTasks().length">&nbsp;</b> incomplete task(s)
-<span data-bind="visible: incompleteTasks().length == 0"> - it's beer time!</span>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>

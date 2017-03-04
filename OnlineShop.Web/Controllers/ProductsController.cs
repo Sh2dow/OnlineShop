@@ -2,19 +2,27 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
-using OnlineShop.DL.Context;
 using OnlineShop.Models;
+using OnlineShop.BL.Services;
 
 namespace OnlineShop.Web.Controllers
 {
     public class ProductsController : Controller
     {
-        private ProductContext db = new ProductContext();
+        private FillService fillService;
+
+        public ProductsController()
+        {
+            fillService = new FillService();
+        }
 
         // GET: Products
-        public ActionResult Index()
+        public ActionResult Index(int? categoryId)
         {
-            return View(db.Products.ToList());
+            if (categoryId != null)
+                return View(fillService.GetProductsByCategory((int)categoryId).ToList());
+            else
+                return View(fillService.GetAllProducts().ToList());
         }
 
         // GET: Products/Details/5
@@ -24,7 +32,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product productView = db.Products.Find(id);
+            Product productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -39,7 +47,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product productView = db.Products.Find(id);
+            var productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -56,8 +64,8 @@ namespace OnlineShop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(productView).State = EntityState.Modified;
-                db.SaveChanges();
+                fillService.UpdateProduct(productView);
+                //fillService.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(productView);
@@ -70,7 +78,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product productView = db.Products.Find(id);
+            Product productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -83,19 +91,9 @@ namespace OnlineShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product productView = db.Products.Find(id);
-            db.Products.Remove(productView);
-            db.SaveChanges();
+            Product productView = fillService.GetProductById((int)id);
+            fillService.RemoveProduct(productView);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
