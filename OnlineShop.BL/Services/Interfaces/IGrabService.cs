@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OnlineShop.Models;
 
 namespace OnlineShop.BL.Services.Interfaces
 {
-    interface IGrabService
+    public interface IGrabService
     {
-        IEnumerable<Product> GetAllProducts();
-        IEnumerable<Product> GetProductsByCategory(string category);
+        IEnumerable<Item> GrabItemsByKeyword(string keyword);
+        IEnumerable<Item> GrabItemsByCategory(int categoryId);
+        void GrabJson(object json);
     }
 }

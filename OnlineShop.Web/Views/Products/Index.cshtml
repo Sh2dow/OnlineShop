@@ -1,82 +1,70 @@
-﻿@model IEnumerable<OnlineShop.Models.Product>
+﻿@model IEnumerable <OnlineShop.Models.Item>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Items</h2>
+<h2>Products</h2>
 
-@*<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.seller)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.condition)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ItemWebUrl)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Cost)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.itemLocation)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EbayItemID)
-        </th>
-        <th></th>
-    </tr>
+<table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryCategoryID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryCategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WatchCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ViewItemURLForNaturalSearch)
+            </th>
+            <th></th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.seller)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.condition)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ItemWebUrl)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Cost)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.itemLocation)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EbayItemID)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryCategoryID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryCategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WatchCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ViewItemURLForNaturalSearch)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ItemID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ItemID })
+                </td>
+            </tr>
+        }
 
-</table>*@
+    </table>
 
-<script type="text/javascript">
-        $(function() {
-            var viewModel = ko.mapping.fromJS(@Html.Raw(Model.ToJson()));
-            ko.applyBindings(viewModel);
-          });
+<script>
+    var vm = ko.mapping.fromJS(@Html.Raw(Json.Encode(Model)));
 </script>
 
-<div data-bind='simpleGrid: viewModel'> </div>
-
-<button data-bind='click: addItem'>
-    Add item
-</button>
+<div data-bind='simpleGrid: gridViewModel'> </div>
 
 <button data-bind='click: sortByName'>
     Sort by name
@@ -84,4 +72,8 @@
 
 <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
     Jump to first page
-</button> 
+</button>
+
+<h2>Model: <span data-bind="text: @Model"> </span></h2>
+
+<script src="~/App/app2.js"></script>

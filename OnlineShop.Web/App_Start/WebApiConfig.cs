@@ -8,7 +8,9 @@ namespace OnlineShop.Web.App_Start
         public static void Register(HttpConfiguration config)
         {
             config.MapHttpAttributeRoutes();
-            
+
+            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",

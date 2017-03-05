@@ -1,45 +1,49 @@
-﻿using OnlineShop.BL.Services.Interfaces;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using OnlineShop.Models;
 using OnlineShop.DL;
+using OnlineShop.BL.Services.Interfaces;
 
 namespace OnlineShop.BL.Services
 {
-    public class FillService : IFillService
+    public class LocalService : ILocalService
     {
         private ProductsRepository repo;
 
-        public FillService()
+        public LocalService()
         {
             repo = new ProductsRepository();
         }
 
-        public void UpdateProduct(Product product)
+        public void UpdateProduct(Item product)
         {
             repo.UpdateProduct(product);
             repo.Save();
         }
 
-        public void RemoveProduct(Product product)
+        public void RemoveProduct(Item product)
         {
             repo.RemoveProduct(product);
             repo.Save();
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<Item> GetAllProducts()
         {
             return repo.GetAllProducts();
         }
 
-        public IEnumerable<Product> GetProductsByCategory(int categoryId)
+        public Item GetProductById(int productId)
+        {
+            return repo.GetProductById(productId);
+        }
+
+        public IEnumerable<Item> GetProductsByCategory(int categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }
 
-        public Product GetProductById(int productId)
+        public IEnumerable<Item> GetProductsByKeyword(string keyword)
         {
-            return repo.GetProductById(productId);
+            return repo.GetProductsByKeyword(keyword);
         }
     }
 }

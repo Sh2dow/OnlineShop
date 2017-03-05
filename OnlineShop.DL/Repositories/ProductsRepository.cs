@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
 
 namespace OnlineShop.DL
 {
@@ -14,7 +15,7 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
-        public void AddProduct(Product product)
+        public void AddProduct(Item product)
         {
             if (product != null)
             {
@@ -22,13 +23,13 @@ namespace OnlineShop.DL
             }
         }
 
-        public void UpdateProduct(Product product)
+        public void UpdateProduct(Item product)
         {
             _db.Products.Attach(product);
             _db.Entry(product).State = EntityState.Modified;
         }
 
-        public void RemoveProduct(Product product)
+        public void RemoveProduct(Item product)
         {
             if (product != null)
             {
@@ -36,19 +37,30 @@ namespace OnlineShop.DL
             }
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<Item> GetAllProducts()
         {
             return _db.Products;
         }
 
-        public IEnumerable<Product> GetProductsByCategory(int categoryId)
+        public IEnumerable<Item> GetProductsByCategory(int categoryId)
         {
             return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
         }
 
-        public Product GetProductById(int id)
+        public IEnumerable<Item> GetProductsByKeyword(string keyword)
         {
-            return _db.Products.FirstOrDefault(product => product.ItemID == id);
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Item> GetProductsByCategory(string keyword)
+        {
+            return _db.Products.Where(product => product.Title.Contains(keyword));
+        }
+        
+
+        public Item GetProductById(int id)
+        {
+            return _db.Products.FirstOrDefault(product => product.ItemID == id.ToString());
         }
 
         public void Save()

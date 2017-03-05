@@ -1,4 +1,12 @@
-﻿<p>
+﻿@model IEnumerable<OnlineShop.Models.Item>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<p>
     Category:
     <select data-bind="options: topCategories,
                        optionsText: 'name',
@@ -12,9 +20,9 @@
 </div>
 <button data-bind='click: proceed'>Submit</button>
 
-@*<a href="#" data-bind="event: { click: $parent.navigateManageReturns }, text: OrderNo"></a>*@
-
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("SaveProducts", "SaveProducts")
 </p>
+
+<script src="~/App/app.js"></script>

@@ -8,6 +8,6 @@ namespace OnlineShop.DL
         public ProductContext() : base("ProductContext")
         {
         }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Item> Products { get; set; }
     }
 }

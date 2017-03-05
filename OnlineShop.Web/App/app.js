@@ -39,6 +39,7 @@
     selectedCategory: ko.observable()
 };
 
+var dataToPost = {};
 //bypass the cross-origin resource sharing problem by using YQL to proxy the request through Yahoos servers
 self.proceed = function () {
     var yql_url = 'https://query.yahooapis.com/v1/public/yql';
@@ -46,42 +47,34 @@ self.proceed = function () {
     console.log(url)
     $.ajax({
         'url': yql_url,
+        'type': "POST",
         'data': {
             'q': 'SELECT * FROM json WHERE url="' + url + '"',
             'format': 'json',
             'jsonCompat': 'new',
         },
-        'dataType': 'jsonp',
+        'dataType': 'json',
         'success': function (response) {
-            //console.log(response);
-            ko.mapping.fromJS(response, {}, self);
+            dataToPost = ko.mapping.fromJS(response, {}, self);
+            var model = ko.mapping.toJSON(dataToPost);
+            //console.log(model);
+            $.ajax({
+                url: "/Home/SaveProducts",
+                type: "POST",
+                data: model,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (message) {
+                    ko.mapping.fromJS(data.viewModel, {}, self);
+                    if (message.Status === "success") {
+                        toastr.success(message.Content);
+                    } else if (message.Status === "error") {
+                        toastr.error(message.Content);
+                    }
+                }
+            });
         },
     });
 };
-
-self.save = function () {
-    var model = ko.mapping.toJSON(dataToPost);
-    $.ajax({
-        url: "/Home/SaveProducts",
-        type: "POST",
-        data: model,
-        dataType: "json",
-        contentType: "application/json; charset=utf-8",
-        success: function (message) {
-
-            ko.mapping.fromJS(data.viewModel, {}, self);
-
-            if (message.Status === "success") {
-                toastr.success(message.Content);
-            } else if (message.Status === "error") {
-                toastr.error(message.Content);
-            }
-        }
-    });
-}
-
-//function navigateManageReturns(order) {
-//    var number = order.OrderNo;
-//}
 
 ko.applyBindings(vm);

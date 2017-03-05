@@ -1,64 +1,55 @@
 ﻿using System.Web.Mvc;
-using OnlineShop.DL;
 using OnlineShop.Models;
 using System.Configuration;
+using System.Collections.Generic;
 using OnlineShop.BL;
+using OnlineShop.BL.Services.Interfaces;
+using Newtonsoft.Json;
 
 namespace OnlineShop.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private GrabService grabService;
+        private IGrabService grabService;
+
+        public HomeController()
+        {
+            grabService = new GrabService();
+        }
 
         public ActionResult Index()
         {
             return View();
         }
 
-
-        //[HttpGet]
-        //public ActionResult AddBook(int authorId)
-        //{
-        //    return View(new Book { AuthorId = authorId });
-        //}
-
-        //[HttpPost]
-        //public ActionResult AddBook(Book book)
-        //{
-        //    _bookService.AddBook(book);
-
-        //    return RedirectToAction("Index", new { authorId = book.AuthorId });
-        //}
-
-        // GET: ProductViews/Create
         [HttpGet]
-        public ActionResult SaveProducts()
+        public ActionResult SaveProducts(string Str)
         {
-            return View("Products");
+
+            string appID = ConfigurationManager.AppSettings["AppID"];
+            //string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
+            //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + Str + "&ResponseEncodingType=JSON";
+            //grabService.GrabItemsByCategory(productView);
+            return RedirectToAction("Index", "Products");
         }
 
-        //POST: ProductViews/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SaveProducts(Product productView)
+        public ActionResult SaveProducts(Json json)
         {
-            if (ModelState.IsValid)
-            {
-                // Get AppID and ServerAddress from Web.config
-                string appID = ConfigurationManager.AppSettings["AppID"];
-                string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-                
-                //Take by QueryKeywords
-                //var url = findingServerAddress + "shopping?version=713&appid=" + appID + "&callname=FindPopularItems&QueryKeywords=" + productView.Title + "&ResponseEncodingType=JSON";
+                //if (ModelState.IsValid)
+                //{
+                    // Get AppID and ServerAddress from Web.config
+                    string appID = ConfigurationManager.AppSettings["AppID"];
+                    string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
+            //Take by QueryKeywords
+            //var url = findingServerAddress + "shopping?version=713&appid=" + appID + "&callname=FindPopularItems&QueryKeywords=" + productView.Title + "&ResponseEncodingType=JSON";
+            //Take by categoryId
+            //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + productView.Title + "&ResponseEncodingType=JSON";
+            grabService.GrabJson(json);
 
-                //Take by categoryId
-                //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + productView.Title + "&ResponseEncodingType=JSON";
-
-                grabService.AddProduct(productView);
-                return RedirectToAction("Products");
-            }
-            return View();
+            //}
+            return RedirectToAction("Index", "Products");
         }
-        
+
     }
 }

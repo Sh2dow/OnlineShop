@@ -9,20 +9,24 @@ namespace OnlineShop.Web.Controllers
 {
     public class ProductsController : Controller
     {
-        private FillService fillService;
+        private LocalService fillService;
 
         public ProductsController()
         {
-            fillService = new FillService();
+            fillService = new LocalService();
         }
 
         // GET: Products
-        public ActionResult Index(int? categoryId)
+        //public ActionResult Index(int? categoryId)
+        //{
+        //    if (categoryId != null)
+        //        return View(fillService.GetProductsByCategory((int)categoryId).ToList());
+        //    else
+        //        return View(fillService.GetAllProducts().ToList());
+        //}
+        public ActionResult Index()
         {
-            if (categoryId != null)
-                return View(fillService.GetProductsByCategory((int)categoryId).ToList());
-            else
-                return View(fillService.GetAllProducts().ToList());
+            return View(fillService.GetAllProducts().ToList());
         }
 
         // GET: Products/Details/5
@@ -32,7 +36,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product productView = fillService.GetProductById((int)id);
+            Item productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -60,7 +64,7 @@ namespace OnlineShop.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Title,seller,condition,ItemWebUrl,Cost,itemLocation,EbayItemID")] Product productView)
+        public ActionResult Edit(Item productView)
         {
             if (ModelState.IsValid)
             {
@@ -78,7 +82,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product productView = fillService.GetProductById((int)id);
+            Item productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -91,7 +95,7 @@ namespace OnlineShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Product productView = fillService.GetProductById((int)id);
+            Item productView = fillService.GetProductById((int)id);
             fillService.RemoveProduct(productView);
             return RedirectToAction("Index");
         }
