@@ -19,37 +19,29 @@ namespace OnlineShop.Web.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var model = new ItemByCategory();
+            return View(model);
         }
 
         [HttpGet]
-        public ActionResult SaveProducts(string Str)
+        public ActionResult SaveProducts(string param)
         {
-
-            string appID = ConfigurationManager.AppSettings["AppID"];
-            //string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-            //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + Str + "&ResponseEncodingType=JSON";
-            //grabService.GrabItemsByCategory(productView);
+            if (ModelState.IsValid)
+            {
+                int n;
+                if (int.TryParse(param, out n))
+                    grabService.GrabItemsByCategory(n);
+                else
+                    grabService.GrabItemsByKeyword(param);
+            }
             return RedirectToAction("Index", "Products");
         }
 
-        [HttpPost]
-        public ActionResult SaveProducts(Json json)
-        {
-                //if (ModelState.IsValid)
-                //{
-                    // Get AppID and ServerAddress from Web.config
-                    string appID = ConfigurationManager.AppSettings["AppID"];
-                    string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-            //Take by QueryKeywords
-            //var url = findingServerAddress + "shopping?version=713&appid=" + appID + "&callname=FindPopularItems&QueryKeywords=" + productView.Title + "&ResponseEncodingType=JSON";
-            //Take by categoryId
-            //var url = findingServerAddress + "shopping?version=957&appid=" + appID + "&callname=FindPopularItems&categoryId=" + productView.Title + "&ResponseEncodingType=JSON";
-            grabService.GrabJson(json);
-
-            //}
-            return RedirectToAction("Index", "Products");
-        }
+        //[HttpPost]
+        //public ActionResult SaveProducts()
+        //{
+        //    return RedirectToAction("Index", "Products");
+        //}
 
     }
 }

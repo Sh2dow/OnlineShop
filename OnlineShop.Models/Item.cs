@@ -51,7 +51,13 @@ namespace OnlineShop.Models
         public bool SoldOffeBay { get; set; }
     }
 
-    public class Item
+    public class ItemByCategory
+    {
+        public string PrimaryCategoryID { get; set; }
+        public string PrimaryCategoryName { get; set; }
+    }
+
+    public class Item : ItemByCategory
     {
         [Key]
         public string ItemID { get; set; }
@@ -59,8 +65,6 @@ namespace OnlineShop.Models
         public string ViewItemURLForNaturalSearch { get; set; }
         public string ListingType { get; set; }
         public string GalleryURL { get; set; }
-        public string PrimaryCategoryID { get; set; }
-        public string PrimaryCategoryName { get; set; }
         public int BidCount { get; set; }
         public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
         public string ListingStatus { get; set; }

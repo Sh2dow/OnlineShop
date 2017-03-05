@@ -23,4 +23,4 @@
 };
 
 //ko.applyBindings(viewModel);
-ko.applyBindings(new PagedGridModel(vm));
+ko.applyBindings(new PagedGridModel(vm.Count > 0 ? vm : null));

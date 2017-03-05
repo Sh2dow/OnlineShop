@@ -39,42 +39,9 @@
     selectedCategory: ko.observable()
 };
 
-var dataToPost = {};
-//bypass the cross-origin resource sharing problem by using YQL to proxy the request through Yahoos servers
-self.proceed = function () {
-    var yql_url = 'https://query.yahooapis.com/v1/public/yql';
-    var url = 'http://open.api.ebay.com/shopping?version=957&appid=IgLov-OnlineSh-PRD-32466ad44-6e57bd31&callname=FindPopularItems&categoryId=' + vm.selectedCategory().id + '&ResponseEncodingType=JSON';
-    console.log(url)
-    $.ajax({
-        'url': yql_url,
-        'type': "POST",
-        'data': {
-            'q': 'SELECT * FROM json WHERE url="' + url + '"',
-            'format': 'json',
-            'jsonCompat': 'new',
-        },
-        'dataType': 'json',
-        'success': function (response) {
-            dataToPost = ko.mapping.fromJS(response, {}, self);
-            var model = ko.mapping.toJSON(dataToPost);
-            //console.log(model);
-            $.ajax({
-                url: "/Home/SaveProducts",
-                type: "POST",
-                data: model,
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (message) {
-                    ko.mapping.fromJS(data.viewModel, {}, self);
-                    if (message.Status === "success") {
-                        toastr.success(message.Content);
-                    } else if (message.Status === "error") {
-                        toastr.error(message.Content);
-                    }
-                }
-            });
-        },
-    });
+self.process = function (param) {
+    console.log('/Home/SaveProducts?param=' + param);
+    window.location = '/Home/SaveProducts?param=' + param;
 };
 
 ko.applyBindings(vm);

@@ -1,10 +1,9 @@
-﻿@model IEnumerable<OnlineShop.Models.Item>
+﻿@model OnlineShop.Models.ItemByCategory
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <p>
     Category:
@@ -16,13 +15,14 @@
 
 <div data-bind="visible: selectedCategory">
     You have chosen a Category with id
-    <span data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
+    <span id="selectedCategory" data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
 </div>
-<button data-bind='click: proceed'>Submit</button>
+
+<a href='javascript:void(0)' id="btnPush" onclick='process(vm.selectedCategory().id);' class='btn btn-default' data-bind='visible: selectedCategory'>Proceed request</a>
 
 
 <p>
-    @Html.ActionLink("SaveProducts", "SaveProducts")
+    @Html.ActionLink("SaveProducts", "SaveProducts", new { param = "1217" })
 </p>
 
 <script src="~/App/app.js"></script>

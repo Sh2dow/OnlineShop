@@ -7,6 +7,6 @@ namespace OnlineShop.BL.Services.Interfaces
     {
         IEnumerable<Item> GrabItemsByKeyword(string keyword);
         IEnumerable<Item> GrabItemsByCategory(int categoryId);
-        void GrabJson(object json);
+        IEnumerable<Item> GrabJson(string[] input);
     }
 }

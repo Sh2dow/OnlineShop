@@ -26,7 +26,8 @@ namespace OnlineShop.Web.Controllers
         //}
         public ActionResult Index()
         {
-            return View(fillService.GetAllProducts().ToList());
+            var items = fillService.GetAllProducts().ToList();
+            return View(items);
         }
 
         // GET: Products/Details/5
