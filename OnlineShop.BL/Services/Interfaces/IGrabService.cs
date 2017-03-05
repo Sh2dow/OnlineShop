@@ -5,8 +5,8 @@ namespace OnlineShop.BL.Services.Interfaces
 {
     public interface IGrabService
     {
-        IEnumerable<Item> GrabItemsByKeyword(string keyword);
-        IEnumerable<Item> GrabItemsByCategory(int categoryId);
-        IEnumerable<Item> GrabJson(string[] input);
+        void GrabItemsByKeyword(string keyword);
+        void GrabItemsByCategory(int categoryId);
+        void GrabJson(string[] input);
     }
 }

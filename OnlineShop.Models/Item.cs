@@ -51,29 +51,40 @@ namespace OnlineShop.Models
         public bool SoldOffeBay { get; set; }
     }
 
-    public class ItemByCategory
+    public class Item
     {
+        [Key, JsonProperty]
+        public string ItemID { get; set; }
+        [JsonProperty]
+        public string Title { get; set; }
+        [JsonProperty]
+        public string EndTime { get; set; }
+        [JsonProperty]
         public string PrimaryCategoryID { get; set; }
+        [JsonProperty]
         public string PrimaryCategoryName { get; set; }
+        //[JsonProperty]
+        //public string ViewItemURLForNaturalSearch { get; set; }
+        //[JsonProperty]
+        //public string ListingType { get; set; }
+        //[JsonProperty]
+        //public string GalleryURL { get; set; }
+        //[JsonProperty]
+        //public string BidCount { get; set; }
+        //[JsonProperty]
+        //public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
+        //[JsonProperty]
+        //public string ListingStatus { get; set; }
+        //[JsonProperty]
+        //public string TimeLeft { get; set; }
+        //[JsonProperty]
+        //public ShippingCostSummary ShippingCostSummary { get; set; }
+        //[JsonProperty]
+        //public string WatchCount { get; set; }
+        //[JsonProperty]
+        //public DiscountPriceInfo DiscountPriceInfo { get; set; }
     }
 
-    public class Item : ItemByCategory
-    {
-        [Key]
-        public string ItemID { get; set; }
-        public string EndTime { get; set; }
-        public string ViewItemURLForNaturalSearch { get; set; }
-        public string ListingType { get; set; }
-        public string GalleryURL { get; set; }
-        public int BidCount { get; set; }
-        public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
-        public string ListingStatus { get; set; }
-        public string TimeLeft { get; set; }
-        public string Title { get; set; }
-        public ShippingCostSummary ShippingCostSummary { get; set; }
-        public int WatchCount { get; set; }
-        public DiscountPriceInfo DiscountPriceInfo { get; set; }
-    }
 
     public class ItemArray
     {

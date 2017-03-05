@@ -1,6 +1,4 @@
-﻿@model OnlineShop.Models.ItemByCategory
-
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -13,16 +11,15 @@
                        optionsCaption: 'Choose...'"></select>
 </p>
 
-<div data-bind="visible: selectedCategory">
-    You have chosen a Category with id
-    <span id="selectedCategory" data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
-</div>
-
-<a href='javascript:void(0)' id="btnPush" onclick='process(vm.selectedCategory().id);' class='btn btn-default' data-bind='visible: selectedCategory'>Proceed request</a>
-
+<p>
+    <div data-bind="visible: selectedCategory">
+        You have chosen a category with id
+        <span id="selectedCategory" data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
+    </div>
+</p>
 
 <p>
-    @Html.ActionLink("SaveProducts", "SaveProducts", new { param = "1217" })
+    <a href='javascript:void(0)' id="btnPush" onclick='process(vm.selectedCategory().id);' class='btn btn-primary' data-bind='visible: selectedCategory'>Proceed request</a>
 </p>
 
 <script src="~/App/app.js"></script>

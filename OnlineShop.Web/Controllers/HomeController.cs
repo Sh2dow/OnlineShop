@@ -19,21 +19,17 @@ namespace OnlineShop.Web.Controllers
 
         public ActionResult Index()
         {
-            var model = new ItemByCategory();
-            return View(model);
+            return View();
         }
 
         [HttpGet]
         public ActionResult SaveProducts(string param)
         {
-            if (ModelState.IsValid)
-            {
-                int n;
-                if (int.TryParse(param, out n))
-                    grabService.GrabItemsByCategory(n);
-                else
-                    grabService.GrabItemsByKeyword(param);
-            }
+            int n;
+            if (int.TryParse(param, out n))
+                grabService.GrabItemsByCategory(n);
+            else
+                grabService.GrabItemsByKeyword(param);
             return RedirectToAction("Index", "Products");
         }
 

@@ -15,11 +15,11 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
-        public void AddProduct(Item product)
+        public void AddProducts(IEnumerable<Item> products)
         {
-            if (product != null)
+            if (products != null)
             {
-                _db.Products.Add(product);
+                _db.Products.AddRange(products);
             }
         }
 
