@@ -14,34 +14,34 @@ namespace OnlineShop.BL.Services
             repo = new ProductsRepository();
         }
 
-        public void UpdateProduct(Item product)
+        public void UpdateProduct(ItemFinal product)
         {
             repo.UpdateProduct(product);
             repo.Save();
         }
 
-        public void RemoveProduct(Item product)
+        public void RemoveProduct(ItemFinal product)
         {
             repo.RemoveProduct(product);
             repo.Save();
         }
 
-        public IEnumerable<Item> GetAllProducts()
+        public IEnumerable<ItemFinal> GetAllProducts()
         {
             return repo.GetAllProducts();
         }
 
-        public Item GetProductById(int productId)
+        public ItemFinal GetProductById(int productId)
         {
             return repo.GetProductById(productId);
         }
 
-        public IEnumerable<Item> GetProductsByCategory(int categoryId)
+        public IEnumerable<ItemFinal> GetProductsByCategory(int categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }
 
-        public IEnumerable<Item> GetProductsByKeyword(string keyword)
+        public IEnumerable<ItemFinal> GetProductsByKeyword(string keyword)
         {
             return repo.GetProductsByKeyword(keyword);
         }

@@ -15,7 +15,7 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
-        public void AddProducts(IEnumerable<Item> products)
+        public void AddProducts(IEnumerable<ItemFinal> products)
         {
             if (products != null)
             {
@@ -23,13 +23,13 @@ namespace OnlineShop.DL
             }
         }
 
-        public void UpdateProduct(Item product)
+        public void UpdateProduct(ItemFinal product)
         {
             _db.Products.Attach(product);
             _db.Entry(product).State = EntityState.Modified;
         }
 
-        public void RemoveProduct(Item product)
+        public void RemoveProduct(ItemFinal product)
         {
             if (product != null)
             {
@@ -37,30 +37,30 @@ namespace OnlineShop.DL
             }
         }
 
-        public IEnumerable<Item> GetAllProducts()
+        public IEnumerable<ItemFinal> GetAllProducts()
         {
             return _db.Products;
         }
 
-        public IEnumerable<Item> GetProductsByCategory(int categoryId)
+        public IEnumerable<ItemFinal> GetProductsByCategory(int categoryId)
         {
             return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
         }
 
-        public IEnumerable<Item> GetProductsByKeyword(string keyword)
+        public IEnumerable<ItemFinal> GetProductsByKeyword(string keyword)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Item> GetProductsByCategory(string keyword)
+        public IEnumerable<ItemFinal> GetProductsByCategory(string keyword)
         {
             return _db.Products.Where(product => product.Title.Contains(keyword));
         }
         
 
-        public Item GetProductById(int id)
+        public ItemFinal GetProductById(int id)
         {
-            return _db.Products.FirstOrDefault(product => product.ItemID == id.ToString());
+            return _db.Products.FirstOrDefault(product => product.ItemID == id);
         }
 
         public void Save()

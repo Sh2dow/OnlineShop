@@ -37,7 +37,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item productView = fillService.GetProductById((int)id);
+            ItemFinal productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -65,7 +65,7 @@ namespace OnlineShop.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Item productView)
+        public ActionResult Edit(ItemFinal productView)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item productView = fillService.GetProductById((int)id);
+            ItemFinal productView = fillService.GetProductById((int)id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -96,7 +96,7 @@ namespace OnlineShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Item productView = fillService.GetProductById((int)id);
+            ItemFinal productView = fillService.GetProductById((int)id);
             fillService.RemoveProduct(productView);
             return RedirectToAction("Index");
         }

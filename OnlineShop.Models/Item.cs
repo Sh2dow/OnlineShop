@@ -15,14 +15,14 @@ namespace OnlineShop.Models
 
     public class ShippingServiceCost
     {
-        public int Value { get; set; }
+        public double Value { get; set; }
         [Key]
         public string CurrencyID { get; set; }
     }
 
     public class ListedShippingServiceCost
     {
-        public int Value { get; set; }
+        public double Value { get; set; }
         [Key]
         public string CurrencyID { get; set; }
     }
@@ -51,7 +51,38 @@ namespace OnlineShop.Models
         public bool SoldOffeBay { get; set; }
     }
 
-    public class Item
+    public class ItemFinal : ItemBase
+    {
+        [Key]
+        public new int ItemID { get; set; }
+        public byte[] Image { get; set; }
+        public new decimal Price { get; set; }
+        public new int PrimaryCategoryID { get; set; }
+    }
+    public class Item: ItemBase
+    {
+        [JsonProperty]
+        public string ViewItemURLForNaturalSearch { get; set; }
+        [JsonProperty]
+        public string ListingType { get; set; }
+        [JsonProperty]
+        public string GalleryURL { get; set; }
+        [JsonProperty]
+        public string BidCount { get; set; }
+        [JsonProperty]
+        public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
+        [JsonProperty]
+        public string ListingStatus { get; set; }
+        [JsonProperty]
+        public string TimeLeft { get; set; }
+        [JsonProperty]
+        public ShippingCostSummary ShippingCostSummary { get; set; }
+        [JsonProperty]
+        public string WatchCount { get; set; }
+        [JsonProperty]
+        public DiscountPriceInfo DiscountPriceInfo { get; set; }
+    }
+    public abstract class ItemBase
     {
         [Key, JsonProperty]
         public string ItemID { get; set; }
@@ -63,26 +94,8 @@ namespace OnlineShop.Models
         public string PrimaryCategoryID { get; set; }
         [JsonProperty]
         public string PrimaryCategoryName { get; set; }
-        //[JsonProperty]
-        //public string ViewItemURLForNaturalSearch { get; set; }
-        //[JsonProperty]
-        //public string ListingType { get; set; }
-        //[JsonProperty]
-        //public string GalleryURL { get; set; }
-        //[JsonProperty]
-        //public string BidCount { get; set; }
-        //[JsonProperty]
-        //public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
-        //[JsonProperty]
-        //public string ListingStatus { get; set; }
-        //[JsonProperty]
-        //public string TimeLeft { get; set; }
-        //[JsonProperty]
-        //public ShippingCostSummary ShippingCostSummary { get; set; }
-        //[JsonProperty]
-        //public string WatchCount { get; set; }
-        //[JsonProperty]
-        //public DiscountPriceInfo DiscountPriceInfo { get; set; }
+        [JsonProperty("ConvertedCurrentPrice")]
+        public ConvertedCurrentPrice Price { get; set; }
     }
 
 
@@ -101,24 +114,24 @@ namespace OnlineShop.Models
         public ItemArray ItemArray { get; set; }
     }
 
-    public class Results
-    {
-        [Key]
-        public Json json { get; set; }
-    }
+    //public class Results
+    //{
+    //    [Key]
+    //    public Json json { get; set; }
+    //}
 
-    public class Query
-    {
-        [Key]
-        public int count { get; set; }
-        public string created { get; set; }
-        public string lang { get; set; }
-        public Results results { get; set; }
-    }
+    //public class Query
+    //{
+    //    [Key]
+    //    public int count { get; set; }
+    //    public string created { get; set; }
+    //    public string lang { get; set; }
+    //    public Results results { get; set; }
+    //}
 
-    public class RootObject
-    {
-        [Key]
-        public Query query { get; set; }
-    }
+    //public class RootObject
+    //{
+    //    [Key]
+    //    public Query query { get; set; }
+    //}
 }

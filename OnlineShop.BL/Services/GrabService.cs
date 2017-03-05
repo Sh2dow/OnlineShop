@@ -11,6 +11,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace OnlineShop.BL
 {
@@ -80,10 +81,7 @@ namespace OnlineShop.BL
                     var reader = new StreamReader(resultStream);
                     string s = reader.ReadToEnd();
                     var arr = JsonConvert.DeserializeObject<Json>(s);
-                    //var rootObj = JsonConvert.DeserializeObject<RootObject>(s);
-                    var items = new List<Item>();
-                    //foreach (var obj in rootObj.query.results.json.ItemArray.Item)
-                    //Root.SelectToken("ItemArray[0].Item[0]")
+                    var items = new List<ItemFinal>();
                     foreach (var obj in arr.ItemArray.Item)
                     {
                         var item = new Item();
@@ -92,13 +90,12 @@ namespace OnlineShop.BL
                         item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
                         item.Title = (string)obj.Title;
                         item.EndTime = (string)obj.EndTime;
-                        //item.ItemID = (string)obj["ItemID"];
-                        //item.PrimaryCategoryName = (string)obj["PrimaryCategoryName"];
-                        //item.PrimaryCategoryID = (string)obj["PrimaryCategoryID"];
-                        //item.Title = (string)obj["Title"];
-                        //item.EndTime = (string)obj["EndTime"];
-                        items.Add(item);
+                        item.Price.Value = (double)obj.Price.Value;
+                        item.Price.CurrencyID = (string)obj.Price.CurrencyID;
+                        item.GalleryURL = (string)obj.GalleryURL;
+                        items.Add(ConvertToItemFinal(item));
                     }
+
                     repo.AddProducts(items);
                     repo.Save();
                 }
@@ -123,64 +120,47 @@ namespace OnlineShop.BL
                                         null);
         }
 
-        public void _GrabJson(string[] input)
+        public ItemFinal ConvertToItemFinal(Item item)
         {
-            string appID = ConfigurationManager.AppSettings["AppID"];
-            string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-            var url = findingServerAddress + "shopping?" + input[0] + "appid=" + appID + "&callname=FindPopularItems" + input[1] + "&ResponseEncodingType=JSON";
+            var webRequest = (HttpWebRequest)WebRequest.Create(item.GalleryURL);
+            webRequest.Method = "GET";
 
-            try
+            var response = (HttpWebResponse)webRequest.GetResponse();
+            byte[] data; // will eventually hold the result
+                         // create a MemoryStream to build the result
+            using (var mstrm = new MemoryStream())
             {
-                // Create a request for the URL.   
-                Debug.WriteLine(url);
-                var request = WebRequest.Create(url);
-                // If required by the server, set the credentials.  
-                request.Credentials = CredentialCache.DefaultCredentials;
-                // Get the response.  
-                var response = request.GetResponse();
-                // Display the status.  
-                Debug.WriteLine(((HttpWebResponse)response).StatusDescription);
-                // Get the stream containing content returned by the server.  
-                var dataStream = response.GetResponseStream();
-                // Open the stream using a StreamReader for easy access.  
-                var reader = new StreamReader(dataStream);
-                // Read the content.  
-                string responseFromServer = reader.ReadToEnd();
-                // Display the content.  
-                Debug.WriteLine(responseFromServer);
-                if ((((HttpWebResponse)response).StatusCode == HttpStatusCode.OK) && (response.ContentLength > 0))
+                using (var s = response.GetResponseStream())
                 {
-                    var items = JsonConvert.DeserializeObject<ItemArray>(responseFromServer);
-                    Debug.WriteLine("items.Item: " + items.Item.ToString());
-                    repo.AddProducts(items.Item);
-
-                    //var rootObj = JsonConvert.DeserializeObject<RootObject>(responseFromServer);
-                    ////foreach (var product in items.Item)
-                    //foreach (var product in rootObj.query.results.json.ItemArray.Item)
-                    //{
-                    //    var myProduct = JsonConvert.DeserializeObject<Item>(product);
-                    //    repo.AddProduct((Item)product);
-                    //}
-
-                    //var arr = JsonConvert.DeserializeObject<JObject>(responseFromServer);
-                    //foreach (var obj in arr)
-                    //{
-                    //    item = new Item();
-                    //    //item.ItemID = obj.["ItemID"];
-                    //    items.Add(item);
-                    //}
-                    repo.Save();
-
-                    // Clean up the streams and the response.  
-                    reader.Close();
-                    response.Close();
+                    var tempBuffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
+                    {
+                        mstrm.Write(tempBuffer, 0, bytesRead);
+                    }
                 }
+                mstrm.Flush();
+                data = mstrm.GetBuffer();
             }
-            catch (Exception ex)
+
+            return new ItemFinal
             {
-                Debug.WriteLine("ExceprionMessage: " + ex.Message.ToString());
-                Debug.WriteLine("InnerException: " + ex.InnerException.ToString());
-            }
+                ItemID = int.Parse(item.ItemID),
+                Title = item.Title,
+                EndTime = item.EndTime,
+                Price = (decimal)item.Price.Value,
+                PrimaryCategoryID = int.Parse(item.PrimaryCategoryID),
+                PrimaryCategoryName = item.PrimaryCategoryName,
+                Image = data
+            };
         }
+        public byte[] ConvertToBytes(HttpPostedFileBase image)
+        {
+            byte[] imageBytes = null;
+            BinaryReader reader = new BinaryReader(image.InputStream);
+            imageBytes = reader.ReadBytes((int)image.ContentLength);
+            return imageBytes;
+        }
+
     }
 }
