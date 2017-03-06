@@ -19,7 +19,28 @@ namespace OnlineShop.DL
         {
             if (products != null)
             {
-                _db.Products.AddRange(products);
+                foreach (var product in products)
+                {
+                    if (_db.Products.Any(e => e.ItemID == product.ItemID))
+                    {
+                        _db.Products.Attach(product);
+                        _db.Entry(product).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        _db.Products.Attach(product);
+                    }
+                }
+                //_db.Products.AddRange(products);
+                _db.SaveChanges();
+            }
+        }
+
+        ItemFinal Get(ItemFinal detachedModel)
+        {
+            using (var context = new ProductContext())
+            {
+                return context.Products.Single(x => x.ItemID == detachedModel.ItemID);
             }
         }
 
@@ -49,14 +70,8 @@ namespace OnlineShop.DL
 
         public IEnumerable<ItemFinal> GetProductsByKeyword(string keyword)
         {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<ItemFinal> GetProductsByCategory(string keyword)
-        {
             return _db.Products.Where(product => product.Title.Contains(keyword));
         }
-        
 
         public ItemFinal GetProductById(string id)
         {
