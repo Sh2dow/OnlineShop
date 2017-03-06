@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Mvc;
 using OnlineShop.Models;
 using OnlineShop.BL.Services;
+using System.Collections.Generic;
 
 namespace OnlineShop.Web.Controllers
 {
@@ -26,18 +27,55 @@ namespace OnlineShop.Web.Controllers
         //}
         public ActionResult Index()
         {
-            var items = fillService.GetAllProducts().ToList();
+            var content = fillService.GetAllProducts().Select(s => new
+            {
+                s.ItemID,
+                s.Title,
+                s.Price,
+                s.PrimaryCategoryID,
+                s.PrimaryCategoryName,
+                s.Image
+            });
+            List<ItemFinal> items = content.Select(item => new ItemFinal()
+            {
+                ItemID = item.ItemID,
+                Title = item.Title,
+                Price = item.Price,
+                PrimaryCategoryID = item.PrimaryCategoryID,
+                PrimaryCategoryName = item.PrimaryCategoryName,
+                Image = item.Image,
+            }).ToList();
             return View(items);
         }
 
-        // GET: Products/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult RetrieveImage(string id)
         {
-            if (id == null)
+            byte[] cover = GetImageFromDataBase(id);
+            if (cover != null)
+            {
+                return File(cover, "image/jpg");
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public byte[] GetImageFromDataBase(string Id)
+        {
+            var q = from temp in fillService.GetAllProducts() where temp.ItemID == Id select temp.Image;
+            byte[] cover = q.First();
+            return cover;
+        }
+
+        // GET: Products/Details/5
+        public ActionResult Details(string id)
+        {
+            if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemFinal productView = fillService.GetProductById((int)id);
+            var productView = fillService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -46,13 +84,13 @@ namespace OnlineShop.Web.Controllers
         }
 
         // GET: Products/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var productView = fillService.GetProductById((int)id);
+            var productView = fillService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -77,13 +115,13 @@ namespace OnlineShop.Web.Controllers
         }
 
         // GET: Products/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemFinal productView = fillService.GetProductById((int)id);
+            ItemFinal productView = fillService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -94,9 +132,9 @@ namespace OnlineShop.Web.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string id)
         {
-            ItemFinal productView = fillService.GetProductById((int)id);
+            ItemFinal productView = fillService.GetProductById(id);
             fillService.RemoveProduct(productView);
             return RedirectToAction("Index");
         }

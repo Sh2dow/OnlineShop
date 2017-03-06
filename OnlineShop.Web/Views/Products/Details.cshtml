@@ -1,4 +1,4 @@
-﻿@model OnlineShop.Models.Product
+﻿@model OnlineShop.Models.ItemFinal
 
 @{
     ViewBag.Title = "Details";
@@ -20,56 +20,40 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.seller)
+            @Html.DisplayNameFor(model => model.Price)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.seller)
+            @Html.DisplayFor(model => model.Price)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.condition)
+            @Html.DisplayNameFor(model => model.PrimaryCategoryID)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.condition)
+            @Html.DisplayFor(model => model.PrimaryCategoryID)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.ItemWebUrl)
+            @Html.DisplayNameFor(model => model.PrimaryCategoryName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ItemWebUrl)
+            @Html.DisplayFor(model => model.PrimaryCategoryName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Cost)
+            @Html.DisplayNameFor(model => model.Image)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Cost)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.itemLocation)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.itemLocation)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EbayItemID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EbayItemID)
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" width="80" height="80" />
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ItemID }) |*@
     @Html.ActionLink("Back to List", "Index")
 </p>

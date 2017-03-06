@@ -53,15 +53,17 @@ namespace OnlineShop.Models
 
     public class ItemFinal : ItemBase
     {
-        [Key]
-        public new long ItemID { get; set; }
         public byte[] Image { get; set; }
-        public decimal Price { get; set; }
-        public new int PrimaryCategoryID { get; set; }
+        public string Price { get; set; }
+        [Required]
+        public int PrimaryCategoryID { get; set; }
     }
+
     public class Item: ItemBase
     {
         [JsonProperty]
+        public string PrimaryCategoryID { get; set; }
+        [Required]
         public string ViewItemURLForNaturalSearch { get; set; }
         [JsonProperty]
         public string ListingType { get; set; }
@@ -69,7 +71,7 @@ namespace OnlineShop.Models
         public string GalleryURL { get; set; }
         [JsonProperty]
         public string BidCount { get; set; }
-        [JsonProperty("ConvertedCurrentPrice")]
+        [JsonProperty]
         public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
         [JsonProperty]
         public string ListingStatus { get; set; }
@@ -82,21 +84,19 @@ namespace OnlineShop.Models
         [JsonProperty]
         public DiscountPriceInfo DiscountPriceInfo { get; set; }
     }
+
     public abstract class ItemBase
     {
-        [Key, JsonProperty]
+        [Key, Required, JsonProperty]
         public string ItemID { get; set; }
         [JsonProperty]
         public string Title { get; set; }
         [JsonProperty]
         public DateTime EndTime { get; set; }
         [JsonProperty]
-        public string PrimaryCategoryID { get; set; }
-        [JsonProperty]
         public string PrimaryCategoryName { get; set; }
     }
-
-
+    
     public class ItemArray
     {
         public List<Item> Item { get; set; }

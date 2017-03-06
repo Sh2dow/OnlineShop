@@ -42,7 +42,7 @@ namespace OnlineShop.DL
             return _db.Products;
         }
 
-        public IEnumerable<ItemFinal> GetProductsByCategory(int categoryId)
+        public IEnumerable<ItemFinal> GetProductsByCategory(long categoryId)
         {
             return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
         }
@@ -58,7 +58,7 @@ namespace OnlineShop.DL
         }
         
 
-        public ItemFinal GetProductById(int id)
+        public ItemFinal GetProductById(string id)
         {
             return _db.Products.FirstOrDefault(product => product.ItemID == id);
         }

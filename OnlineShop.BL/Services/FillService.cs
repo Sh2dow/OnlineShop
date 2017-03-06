@@ -31,12 +31,12 @@ namespace OnlineShop.BL.Services
             return repo.GetAllProducts();
         }
 
-        public ItemFinal GetProductById(int productId)
+        public ItemFinal GetProductById(string productId)
         {
             return repo.GetProductById(productId);
         }
 
-        public IEnumerable<ItemFinal> GetProductsByCategory(int categoryId)
+        public IEnumerable<ItemFinal> GetProductsByCategory(long categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }

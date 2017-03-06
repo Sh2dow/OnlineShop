@@ -1,6 +1,12 @@
 ﻿var PagedGridModel = function (items) {
     this.items = ko.observableArray(items);
 
+    this.sortByPrimaryCategoryName = function () {
+        this.items.sort(function (a, b) {
+            return a.PrimaryCategoryName < b.PrimaryCategoryName ? -1 : 1;
+        });
+    };
+
     this.sortByName = function () {
         this.items.sort(function (a, b) {
             return a.Title < b.Title ? -1 : 1;
@@ -15,12 +21,15 @@
         data: this.items,
         columns: [
         { headerText: "Title", rowText: "Title" },
+        { headerText: "Price", rowText: "Price" },
         { headerText: "PrimaryCategoryID", rowText: "PrimaryCategoryID" },
-        { headerText: "EndTime", rowText: "EndTime" }
+        { headerText: "PrimaryCategoryName", rowText: "PrimaryCategoryName" },
+        { headerText: "EndTime", rowText: "EndTime" },
+        { headerText: "Image", row: "EndTime" }
         ],
         pageSize: 15
     });
 };
 
-//ko.applyBindings(viewModel);
-ko.applyBindings(new PagedGridModel(vm.Count > 0 ? vm : null));
+//ko.applyBindings(new PagedGridModel(vm));
+ko.applyBindings(new PagedGridModel(viewModel));

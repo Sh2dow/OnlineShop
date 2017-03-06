@@ -5,11 +5,9 @@ using OnlineShop.DL;
 using System.Net;
 using Newtonsoft.Json;
 using OnlineShop.BL.Services.Interfaces;
-using Newtonsoft.Json.Linq;
 using System.Configuration;
 using System.IO;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -74,7 +72,7 @@ namespace OnlineShop.BL
             try
             {
                 var webResponse = (HttpWebResponse)webRequest.GetResponse();
-                Debug.WriteLine("webResponse.ContentLength: " + webResponse.ContentLength);
+                Debug.Print("webResponse.ContentLength: " + webResponse.ContentLength);
                 if ((webResponse.StatusCode == HttpStatusCode.OK) && (data.Length > 0))
                 {
                     var resultStream = new MemoryStream(data);
@@ -89,7 +87,7 @@ namespace OnlineShop.BL
                         item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
                         item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
                         item.Title = (string)obj.Title;
-                        item.EndTime = (DateTime)obj.EndTime;
+                        item.EndTime = obj.EndTime;
                         item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
                         item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
                         item.ConvertedCurrentPrice.Value = (double)obj.ConvertedCurrentPrice.Value;
@@ -108,7 +106,7 @@ namespace OnlineShop.BL
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ExceptionMessage: " + ex.Message.ToString());
+                Debug.Print("ExceptionMessage: " + ex.Message.ToString());
                 //Debug.WriteLine("InnerException: " + ex.InnerException.ToString());
             }
         }
@@ -129,7 +127,8 @@ namespace OnlineShop.BL
         public ItemFinal ConvertToItemFinal(Item item)
         {
             byte[] data = null; // will eventually hold the result
-                         // create a MemoryStream to build the result
+                                // create a MemoryStream to build the result
+            Debug.Print("ItemID: " + item.ItemID);
             if (item.GalleryURL != null)
             {
                 var webRequest = (HttpWebRequest)WebRequest.Create(item.GalleryURL);
@@ -154,13 +153,13 @@ namespace OnlineShop.BL
             }
             return new ItemFinal
             {
-                ItemID = long.Parse(item.ItemID),
+                ItemID = item.ItemID,
                 Title = item.Title,
                 EndTime = item.EndTime,
-                Price = (decimal)item.ConvertedCurrentPrice.Value,
+                Price = String.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", (string)item.ConvertedCurrentPrice.CurrencyID),
                 PrimaryCategoryID = int.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = data ?? new byte[0]
+                Image = data
             };
         }
         public byte[] ConvertToBytes(HttpPostedFileBase image)
