@@ -37,63 +37,37 @@ namespace OnlineShop.BL
             string appID = ConfigurationManager.AppSettings["AppID"];
             string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
             var url = findingServerAddress + "shopping?" + input[0] + "appid=" + appID + "&callname=FindPopularItems" + input[1] + "&ResponseEncodingType=JSON";
-
-            var webRequest = (HttpWebRequest)WebRequest.Create(url);
-            webRequest.Method = "GET";
-
-            var response = (HttpWebResponse)webRequest.GetResponse();
-            byte[] data; // will eventually hold the result
-                         // create a MemoryStream to build the result
-            using (var mstrm = new MemoryStream())
-            {
-                using (var s = response.GetResponseStream())
-                {
-                    var tempBuffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
-                    {
-                        mstrm.Write(tempBuffer, 0, bytesRead);
-                    }
-                }
-                mstrm.Flush();
-                data = mstrm.GetBuffer();
-            }
-
             try
             {
-                var webResponse = (HttpWebResponse)webRequest.GetResponse();
-                Debug.Print("webResponse.ContentLength: " + webResponse.ContentLength);
-                if ((webResponse.StatusCode == HttpStatusCode.OK) && (data.Length > 0))
+                var resultStream = new MemoryStream(LoadBytesFromUrl(url));
+                var reader = new StreamReader(resultStream);
+                string s = reader.ReadToEnd();
+                var arr = JsonConvert.DeserializeObject<Json>(s);
+                var items = new List<Item>();
+                foreach (var obj in arr.ItemArray.Item)
                 {
-                    var resultStream = new MemoryStream(data);
-                    var reader = new StreamReader(resultStream);
-                    string s = reader.ReadToEnd();
-                    var arr = JsonConvert.DeserializeObject<Json>(s);
-                    var items = new List<Item>();
-                    foreach (var obj in arr.ItemArray.Item)
-                    {
-                        var item = new Item();
-                        item.ItemID = (string)obj.ItemID;
-                        item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
-                        item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
-                        item.Title = (string)obj.Title;
-                        item.EndTime = obj.EndTime;
-                        item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
-                        item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
-                        item.ConvertedCurrentPrice.Value = (double)obj.ConvertedCurrentPrice.Value;
-                        item.GalleryURL = (string)obj.GalleryURL ?? "";
-                        items.Add(item);
-                    }
-
-                    var itemsFinal = new List<ItemFinal>();
-                    foreach (var item in items)
-                    {
-                        if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
-                            itemsFinal.Add(ConvertToItemFinal(item));
-                    }
-                    Debug.Print("items count: " + items.Count);
-                    repo.AddProducts(itemsFinal);
+                    var item = new Item();
+                    item.ItemID = (string)obj.ItemID;
+                    item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
+                    item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
+                    item.Title = (string)obj.Title;
+                    item.EndTime = obj.EndTime;
+                    item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
+                    item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
+                    item.ConvertedCurrentPrice.Value = (double)obj.ConvertedCurrentPrice.Value;
+                    item.GalleryURL = (string)obj.GalleryURL ?? "";
+                    items.Add(item);
                 }
+
+                var itemsFinal = new List<ItemFinal>();
+                foreach (var item in items)
+                {
+                    if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
+                        itemsFinal.Add(ConvertToItemFinal(item));
+                }
+                Debug.Print("items count: " + items.Count);
+                Debug.Print("itemsFinal count: " + itemsFinal.Count);
+                repo.AddProducts(itemsFinal);
             }
             catch (Exception ex)
             {
@@ -135,19 +109,24 @@ namespace OnlineShop.BL
             if (String.IsNullOrEmpty(url)) return data;
             var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
             var response = (HttpWebResponse)webRequest.GetResponse();
-            using (var mstrm = new MemoryStream())
+
+            Debug.Print("webResponse.ContentLength: " + response.ContentLength);
+            if (response.StatusCode == HttpStatusCode.OK)
             {
-                using (var s = response.GetResponseStream())
+                using (var mstrm = new MemoryStream())
                 {
-                    var tempBuffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
+                    using (var s = response.GetResponseStream())
                     {
-                        mstrm.Write(tempBuffer, 0, bytesRead);
+                        var tempBuffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
+                        {
+                            mstrm.Write(tempBuffer, 0, bytesRead);
+                        }
                     }
+                    mstrm.Flush();
+                    data = mstrm.GetBuffer();
                 }
-                mstrm.Flush();
-                data = mstrm.GetBuffer();
             }
             return data;
         }

@@ -31,9 +31,9 @@
         { name: 'Sports Memorabilia', id: 64482 },
         { name: 'Stamps', id: 260 },
         { name: 'Toys & Games', id: 220 },
-        { name: 'Vehicle Parts & Accessories', id: 131090 },
+        //{ name: 'Vehicle Parts & Accessories', id: 131090 },
         { name: 'Video Games & Consoles', id: 1249 },
-        { name: 'Wholesale & Job Lots', id: 40005 },
+        //{ name: 'Wholesale & Job Lots', id: 40005 },
         { name: 'Everything Else', id: 99 },
     ],
     selectedCategory: ko.observable()
