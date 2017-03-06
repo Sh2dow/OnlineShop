@@ -22,6 +22,16 @@ namespace OnlineShop.BL
             repo = new ProductsRepository();
         }
 
+        public void AddProducts(IEnumerable<Item> products)
+        {
+
+            foreach (var item in products)
+            {
+
+            }
+            repo.Save();
+        }
+
         public void GrabItemsByKeyword(string keyword)
         {
             GrabJson(new[] { "version=713&", "&QueryKeywords=" + keyword });
@@ -91,6 +101,7 @@ namespace OnlineShop.BL
                         itemsFinal.Add(ConvertToItemFinal(item));
                     }
                     repo.AddProducts(itemsFinal);
+                    repo.Save();
                 }
             }
             catch (Exception ex)

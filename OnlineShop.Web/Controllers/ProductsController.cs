@@ -45,7 +45,6 @@ namespace OnlineShop.Web.Controllers
                 PrimaryCategoryName = item.PrimaryCategoryName,
                 Image = item.Image,
             }).ToList();
-
             return View(items);
         }
 

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 
 namespace OnlineShop.Models
@@ -88,7 +87,7 @@ namespace OnlineShop.Models
 
     public abstract class ItemBase
     {
-        [Key, Required, JsonProperty, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, Required, JsonProperty]
         public string ItemID { get; set; }
         [JsonProperty]
         public string Title { get; set; }
