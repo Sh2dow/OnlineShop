@@ -81,7 +81,7 @@ namespace OnlineShop.BL
                     var reader = new StreamReader(resultStream);
                     string s = reader.ReadToEnd();
                     var arr = JsonConvert.DeserializeObject<Json>(s);
-                    var items = new List<ItemFinal>();
+                    var items = new List<Item>();
                     foreach (var obj in arr.ItemArray.Item)
                     {
                         var item = new Item();
@@ -89,20 +89,26 @@ namespace OnlineShop.BL
                         item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
                         item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
                         item.Title = (string)obj.Title;
-                        item.EndTime = (string)obj.EndTime;
-                        item.Price.Value = (double)obj.Price.Value;
-                        item.Price.CurrencyID = (string)obj.Price.CurrencyID;
-                        item.GalleryURL = (string)obj.GalleryURL;
-                        items.Add(ConvertToItemFinal(item));
+                        item.EndTime = (DateTime)obj.EndTime;
+                        item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
+                        item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
+                        item.ConvertedCurrentPrice.Value = (double)obj.ConvertedCurrentPrice.Value;
+                        item.GalleryURL = (string)obj.GalleryURL ?? "";
+                        items.Add(item);
                     }
 
-                    repo.AddProducts(items);
+                    var itemsFinal = new List<ItemFinal>();
+                    foreach (var item in items)
+                    {
+                        itemsFinal.Add(ConvertToItemFinal(item));
+                    }
+                    repo.AddProducts(itemsFinal);
                     repo.Save();
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ExceprionMessage: " + ex.Message.ToString());
+                Debug.WriteLine("ExceptionMessage: " + ex.Message.ToString());
                 //Debug.WriteLine("InnerException: " + ex.InnerException.ToString());
             }
         }
@@ -122,36 +128,39 @@ namespace OnlineShop.BL
 
         public ItemFinal ConvertToItemFinal(Item item)
         {
-            var webRequest = (HttpWebRequest)WebRequest.Create(item.GalleryURL);
-            webRequest.Method = "GET";
-
-            var response = (HttpWebResponse)webRequest.GetResponse();
-            byte[] data; // will eventually hold the result
+            byte[] data = null; // will eventually hold the result
                          // create a MemoryStream to build the result
-            using (var mstrm = new MemoryStream())
+            if (item.GalleryURL != null)
             {
-                using (var s = response.GetResponseStream())
-                {
-                    var tempBuffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
-                    {
-                        mstrm.Write(tempBuffer, 0, bytesRead);
-                    }
-                }
-                mstrm.Flush();
-                data = mstrm.GetBuffer();
-            }
+                var webRequest = (HttpWebRequest)WebRequest.Create(item.GalleryURL);
+                webRequest.Method = "GET";
 
+                var response = (HttpWebResponse)webRequest.GetResponse();
+                
+                using (var mstrm = new MemoryStream())
+                {
+                    using (var s = response.GetResponseStream())
+                    {
+                        var tempBuffer = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
+                        {
+                            mstrm.Write(tempBuffer, 0, bytesRead);
+                        }
+                    }
+                    mstrm.Flush();
+                    data = mstrm.GetBuffer();
+                }
+            }
             return new ItemFinal
             {
-                ItemID = int.Parse(item.ItemID),
+                ItemID = long.Parse(item.ItemID),
                 Title = item.Title,
                 EndTime = item.EndTime,
-                Price = (decimal)item.Price.Value,
+                Price = (decimal)item.ConvertedCurrentPrice.Value,
                 PrimaryCategoryID = int.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = data
+                Image = data ?? new byte[0]
             };
         }
         public byte[] ConvertToBytes(HttpPostedFileBase image)
