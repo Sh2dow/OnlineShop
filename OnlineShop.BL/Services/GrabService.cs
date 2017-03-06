@@ -22,16 +22,6 @@ namespace OnlineShop.BL
             repo = new ProductsRepository();
         }
 
-        public void AddProducts(IEnumerable<Item> products)
-        {
-
-            foreach (var item in products)
-            {
-
-            }
-            repo.Save();
-        }
-
         public void GrabItemsByKeyword(string keyword)
         {
             GrabJson(new[] { "version=713&", "&QueryKeywords=" + keyword });
@@ -98,16 +88,16 @@ namespace OnlineShop.BL
                     var itemsFinal = new List<ItemFinal>();
                     foreach (var item in items)
                     {
-                        itemsFinal.Add(ConvertToItemFinal(item));
+                        if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
+                            itemsFinal.Add(ConvertToItemFinal(item));
                     }
+                    Debug.Print("items count: " + items.Count);
                     repo.AddProducts(itemsFinal);
-                    repo.Save();
                 }
             }
             catch (Exception ex)
             {
                 Debug.Print("ExceptionMessage: " + ex.Message.ToString());
-                //Debug.WriteLine("InnerException: " + ex.InnerException.ToString());
             }
         }
 
@@ -117,7 +107,7 @@ namespace OnlineShop.BL
             string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
             var url = findingServerAddress + "shopping?" + input[0] + "appid=" + appID + "&callname=FindPopularItems" + input[1] + "&ResponseEncodingType=JSON";
 
-            var request = WebRequest.Create(url);
+            var request = WebRequest.Create(new Uri(url));
             var response = (HttpWebResponse)await Task.Factory
                 .FromAsync<WebResponse>(request.BeginGetResponse,
                                         request.EndGetResponse,
@@ -126,31 +116,7 @@ namespace OnlineShop.BL
 
         public ItemFinal ConvertToItemFinal(Item item)
         {
-            byte[] data = null; // will eventually hold the result
-                                // create a MemoryStream to build the result
             Debug.Print("ItemID: " + item.ItemID);
-            if (item.GalleryURL != null)
-            {
-                var webRequest = (HttpWebRequest)WebRequest.Create(item.GalleryURL);
-                webRequest.Method = "GET";
-
-                var response = (HttpWebResponse)webRequest.GetResponse();
-                
-                using (var mstrm = new MemoryStream())
-                {
-                    using (var s = response.GetResponseStream())
-                    {
-                        var tempBuffer = new byte[4096];
-                        int bytesRead;
-                        while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
-                        {
-                            mstrm.Write(tempBuffer, 0, bytesRead);
-                        }
-                    }
-                    mstrm.Flush();
-                    data = mstrm.GetBuffer();
-                }
-            }
             return new ItemFinal
             {
                 ItemID = item.ItemID,
@@ -159,9 +125,33 @@ namespace OnlineShop.BL
                 Price = String.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", (string)item.ConvertedCurrentPrice.CurrencyID),
                 PrimaryCategoryID = int.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = data
+                Image = (LoadBytesFromUrl(item.GalleryURL))
             };
         }
+
+        public byte[] LoadBytesFromUrl(string url)
+        {
+            byte[] data = new byte[0];
+            if (String.IsNullOrEmpty(url)) return data;
+            var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
+            var response = (HttpWebResponse)webRequest.GetResponse();
+            using (var mstrm = new MemoryStream())
+            {
+                using (var s = response.GetResponseStream())
+                {
+                    var tempBuffer = new byte[4096];
+                    int bytesRead;
+                    while ((bytesRead = s.Read(tempBuffer, 0, tempBuffer.Length)) != 0)
+                    {
+                        mstrm.Write(tempBuffer, 0, bytesRead);
+                    }
+                }
+                mstrm.Flush();
+                data = mstrm.GetBuffer();
+            }
+            return data;
+        }
+
         public byte[] ConvertToBytes(HttpPostedFileBase image)
         {
             byte[] imageBytes = null;

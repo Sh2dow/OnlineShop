@@ -6,7 +6,7 @@
         { name: 'Books, Comics & Magazines', id: 267 },
         { name: 'Business, Office & Industrial', id: 12576 },
         { name: 'Cameras & Photography', id: 625 },
-        { name: 'Cars, Motorcycles & Vehicles', id: 9800 },
+        //{ name: 'Cars, Motorcycles & Vehicles', id: 9800 },
         { name: 'Clothes, Shoes & Accessories', id: 11450 },
         { name: 'Coins', id: 11116 },
         { name: 'Collectables', id: 1 },
