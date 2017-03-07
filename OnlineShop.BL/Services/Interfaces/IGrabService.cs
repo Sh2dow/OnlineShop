@@ -6,7 +6,7 @@ namespace OnlineShop.BL.Services.Interfaces
     public interface IGrabService
     {
         void GrabItemsByKeyword(string keyword);
-        void GrabItemsByCategory(int categoryId);
+        void GrabItemsByCategory(long categoryId);
         void GrabJson(string[] input);
     }
 }

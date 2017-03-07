@@ -25,8 +25,8 @@ namespace OnlineShop.Web.Controllers
         [HttpGet]
         public ActionResult SaveProducts(string param)
         {
-            int n;
-            if (int.TryParse(param, out n))
+            long n;
+            if (long.TryParse(param, out n))
                 grabService.GrabItemsByCategory(n);
             else
                 grabService.GrabItemsByKeyword(param);

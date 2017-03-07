@@ -27,7 +27,7 @@ namespace OnlineShop.BL
             GrabJson(new[] { "version=713&", "&QueryKeywords=" + keyword });
         }
 
-        public void GrabItemsByCategory(int categoryId)
+        public void GrabItemsByCategory(long categoryId)
         {
             GrabJson(new[] { "version=957&", "&categoryId=" + categoryId.ToString() });
         }
