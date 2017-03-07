@@ -25,48 +25,32 @@ namespace OnlineShop.Web.Controllers
         //    else
         //        return View(fillService.GetAllProducts().ToList());
         //}
+
         public ActionResult Index()
         {
-            var content = fillService.GetAllProducts().Select(s => new
-            {
-                s.ItemID,
-                s.Title,
-                s.Price,
-                s.PrimaryCategoryID,
-                s.PrimaryCategoryName,
-                s.Image
-            });
-            List<ItemFinal> items = content.Select(item => new ItemFinal()
-            {
-                ItemID = item.ItemID,
-                Title = item.Title,
-                Price = item.Price,
-                PrimaryCategoryID = item.PrimaryCategoryID,
-                PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = item.Image,
-            }).ToList();
+            //var content = fillService.GetAllProducts().Select(s => new
+            //{
+            //    s.ItemID,
+            //    s.Title,
+            //    s.ViewItemURLForNaturalSearch,
+            //    s.Price,
+            //    s.PrimaryCategoryID,
+            //    s.PrimaryCategoryName,
+            //    s.Image
+            //});
+            //List<ItemFinal> items = content.Select(item => new ItemFinal()
+            //{
+            //    ItemID = item.ItemID,
+            //    Title = item.Title,
+            //    Price = item.Price,
+            //    ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
+            //    PrimaryCategoryID = item.PrimaryCategoryID,
+            //    PrimaryCategoryName = item.PrimaryCategoryName,
+            //    Image = item.Image,
+            //}).ToList();
 
-            return View(items);
-        }
-
-        public ActionResult RetrieveImage(string id)
-        {
-            byte[] cover = GetImageFromDataBase(id);
-            if (cover != null)
-            {
-                return File(cover, "image/jpg");
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public byte[] GetImageFromDataBase(string Id)
-        {
-            var q = from temp in fillService.GetAllProducts() where temp.ItemID == Id select temp.Image;
-            byte[] cover = q.First();
-            return cover;
+            var model = fillService.GetAllProducts();
+            return View(model);
         }
 
         // GET: Products/Details/5

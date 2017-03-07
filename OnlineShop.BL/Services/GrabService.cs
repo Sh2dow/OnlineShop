@@ -48,6 +48,7 @@ namespace OnlineShop.BL
                 {
                     var item = new Item();
                     item.ItemID = obj.ItemID;
+                    item.ViewItemURLForNaturalSearch = obj.ViewItemURLForNaturalSearch;
                     item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
                     item.PrimaryCategoryID = obj.PrimaryCategoryID;
                     item.Title = obj.Title;
@@ -95,11 +96,12 @@ namespace OnlineShop.BL
             {
                 ItemID = item.ItemID,
                 Title = item.Title,
+                ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
                 EndTime = item.EndTime,
                 Price = string.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", item.ConvertedCurrentPrice.CurrencyID),
                 PrimaryCategoryID = long.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = (LoadBytesFromUrl(item.GalleryURL))
+                Image = Convert.ToBase64String(LoadBytesFromUrl(item.GalleryURL))
             };
         }
 
@@ -131,13 +133,13 @@ namespace OnlineShop.BL
             return data;
         }
 
-        public byte[] ConvertToBytes(HttpPostedFileBase image)
-        {
-            byte[] imageBytes = null;
-            BinaryReader reader = new BinaryReader(image.InputStream);
-            imageBytes = reader.ReadBytes(image.ContentLength);
-            return imageBytes;
-        }
+        //public byte[] ConvertToBytes(HttpPostedFileBase image)
+        //{
+        //    byte[] imageBytes = null;
+        //    BinaryReader reader = new BinaryReader(image.InputStream);
+        //    imageBytes = reader.ReadBytes(image.ContentLength);
+        //    return imageBytes;
+        //}
 
     }
 }

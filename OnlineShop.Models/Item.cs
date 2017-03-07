@@ -54,7 +54,7 @@ namespace OnlineShop.Models
 
     public class ItemFinal : ItemBase
     {
-        public byte[] Image { get; set; }
+        public string Image { get; set; }
         public string Price { get; set; }
         [Required]
         public long PrimaryCategoryID { get; set; }
@@ -62,10 +62,8 @@ namespace OnlineShop.Models
 
     public class Item: ItemBase
     {
-        [JsonProperty]
+        [Required, JsonProperty]
         public string PrimaryCategoryID { get; set; }
-        [Required]
-        public string ViewItemURLForNaturalSearch { get; set; }
         [JsonProperty]
         public string ListingType { get; set; }
         [JsonProperty]
@@ -92,6 +90,8 @@ namespace OnlineShop.Models
         public string ItemID { get; set; }
         [JsonProperty]
         public string Title { get; set; }
+        [JsonProperty]
+        public string ViewItemURLForNaturalSearch { get; set; }
         [JsonProperty]
         public DateTime EndTime { get; set; }
         [JsonProperty]

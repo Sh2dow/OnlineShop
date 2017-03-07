@@ -1,18 +1,12 @@
-﻿@using Newtonsoft.Json;
-@using System.Text;
-
-@model IEnumerable<OnlineShop.Models.ItemFinal>
-
+﻿@model IEnumerable<OnlineShop.Models.ItemFinal>
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
-    string jsonData = JsonConvert.SerializeObject(Model);
 }
 <h2>Products</h2>
 
-<table class="table" >
-        <tr>
+<table class="tableMVC">
+    @*<tr>
             <th>
                 @Html.DisplayNameFor(model => model.Image)
             </th>
@@ -28,16 +22,19 @@
             <th>
                 @Html.DisplayNameFor(model => model.PrimaryCategoryName)
             </th>
+            <th>
+                "Actions"
+            </th>
         </tr>
 
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    <img src="data:image;base64,@System.Convert.ToBase64String(item.Image)" width="80" height="80" />
+                    <img src="data:image;base64,@item.Image" width="80" height="80" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title)
+                    <a href="@item.ViewItemURLForNaturalSearch">@item.Title</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
@@ -53,26 +50,29 @@
                     @Html.ActionLink("Delete", "Delete", new { id = item.ItemID })
                 </td>
             </tr>
-        }
+        }*@
+</table>
 
-    </table>
+<div class='jumbotron'>
+    <div class='tableKO'>
+        <div data-bind='simpleGrid: gridViewModel'> </div>
 
-<script>
-    var viewModel = ko.mapping.fromJS($.parseJSON('@Html.Raw(jsonData)'))
+        <button data-bind='click: sortByTitle'>
+            Sort by Title
+        </button>
+
+        <button data-bind='click: sortByPrimaryCategoryName'>
+            Sort by Category
+        </button>
+
+        <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
+            Jump to first page
+        </button>
+    </div>
+</div>
+
+<script src="~/App/app2.js"></script>
+<script type="text/javascript">
+    var jsonData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    ko.applyBindings(new PagedGridModel(jsonData));
 </script>
-
-<div data-bind='simpleGrid: gridViewModel'> </div>
-
-<button data-bind='click: sortByName'>
-    Sort by name
-</button>
-
-<button data-bind='click: sortByPrimaryCategoryName'>
-    Sort by Category
-</button>
-
-<button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
-    Jump to first page
-</button>
-
-@*<script src="~/App/app2.js"></script>*@
