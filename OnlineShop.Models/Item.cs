@@ -57,7 +57,7 @@ namespace OnlineShop.Models
         public byte[] Image { get; set; }
         public string Price { get; set; }
         [Required]
-        public int PrimaryCategoryID { get; set; }
+        public long PrimaryCategoryID { get; set; }
     }
 
     public class Item: ItemBase

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System;
+using System.Diagnostics;
 
 namespace OnlineShop.DL
 {
@@ -23,13 +24,14 @@ namespace OnlineShop.DL
                 {
                     if (_db.Products.Any(e => e.ItemID == product.ItemID))
                     {
+                        Debug.Print("Updating entity id: " + product.ItemID);
                         _db.Products.Attach(product);
                         _db.Entry(product).State = EntityState.Modified;
                     }
                     else
                     {
                         _db.Products.Attach(product);
-                        _db.Products.AddRange(products);
+                        _db.Products.Add(product);
                     }
                 }
                 _db.SaveChanges();

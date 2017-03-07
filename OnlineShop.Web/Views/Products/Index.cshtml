@@ -26,9 +26,6 @@
                 @Html.DisplayNameFor(model => model.EndTime)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrimaryCategoryID)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.PrimaryCategoryName)
             </th>
         </tr>
@@ -49,10 +46,7 @@
                     @Html.DisplayFor(modelItem => item.EndTime)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PrimaryCategoryID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrimaryCategoryName)
+                    @Html.ActionLink(item.PrimaryCategoryName, "SaveProducts", "Home", new { param = item.PrimaryCategoryID }, null)
                 </td>
                 <td>
                     @Html.ActionLink("Details", "Details", new { id = item.ItemID }) |
@@ -63,8 +57,8 @@
 
     </table>
 
-@*<script>
-    var viewModel = ko.mapping.fromJS($.parseJSON('@Html.Raw(jsonData)'));
+<script>
+    var viewModel = ko.mapping.fromJS($.parseJSON('@Html.Raw(jsonData)'))
 </script>
 
 <div data-bind='simpleGrid: gridViewModel'> </div>
@@ -79,6 +73,6 @@
 
 <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
     Jump to first page
-</button>*@
+</button>
 
 @*<script src="~/App/app2.js"></script>*@

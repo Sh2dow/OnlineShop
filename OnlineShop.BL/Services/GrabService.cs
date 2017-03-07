@@ -47,14 +47,14 @@ namespace OnlineShop.BL
                 foreach (var obj in arr.ItemArray.Item)
                 {
                     var item = new Item();
-                    item.ItemID = (string)obj.ItemID;
+                    item.ItemID = obj.ItemID;
                     item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
-                    item.PrimaryCategoryID = (string)obj.PrimaryCategoryID;
-                    item.Title = (string)obj.Title;
+                    item.PrimaryCategoryID = obj.PrimaryCategoryID;
+                    item.Title = obj.Title;
                     item.EndTime = obj.EndTime;
                     item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
                     item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
-                    item.ConvertedCurrentPrice.Value = (double)obj.ConvertedCurrentPrice.Value;
+                    item.ConvertedCurrentPrice.Value = obj.ConvertedCurrentPrice.Value;
                     item.GalleryURL = (string)obj.GalleryURL ?? "";
                     items.Add(item);
                 }
@@ -96,8 +96,8 @@ namespace OnlineShop.BL
                 ItemID = item.ItemID,
                 Title = item.Title,
                 EndTime = item.EndTime,
-                Price = String.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", (string)item.ConvertedCurrentPrice.CurrencyID),
-                PrimaryCategoryID = int.Parse(item.PrimaryCategoryID),
+                Price = string.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", item.ConvertedCurrentPrice.CurrencyID),
+                PrimaryCategoryID = long.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
                 Image = (LoadBytesFromUrl(item.GalleryURL))
             };
@@ -106,7 +106,7 @@ namespace OnlineShop.BL
         public byte[] LoadBytesFromUrl(string url)
         {
             byte[] data = new byte[0];
-            if (String.IsNullOrEmpty(url)) return data;
+            if (string.IsNullOrEmpty(url)) return data;
             var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
             var response = (HttpWebResponse)webRequest.GetResponse();
 
@@ -135,7 +135,7 @@ namespace OnlineShop.BL
         {
             byte[] imageBytes = null;
             BinaryReader reader = new BinaryReader(image.InputStream);
-            imageBytes = reader.ReadBytes((int)image.ContentLength);
+            imageBytes = reader.ReadBytes(image.ContentLength);
             return imageBytes;
         }
 
