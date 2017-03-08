@@ -5,74 +5,44 @@
 }
 <h2>Products</h2>
 
-<table class="tableMVC">
-    @*<tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Image)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PrimaryCategoryName)
-            </th>
-            <th>
-                "Actions"
-            </th>
-        </tr>
+<div class='tableKO'>
+    <div data-bind='simpleGrid: gridViewModel, simpleGridTemplate: "custom_grid_template"'></div>
+    <script type="text/html" id="custom_grid_template">
+        <table class="ko-grid" cellspacing="0">
+            <thead>
+                <tr data-bind="foreach: columns">
+                    <th data-bind="text: headerText"></th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: itemsOnCurrentPage">
+                <tr data-bind="foreach: $parent.columns">
+                    <!--ko if: headerText == 'Image'-->
+                    <td>
+                        <img data-bind="attr: {src:'data:image;base64,' + $parent.Image}" height=80 width=80 />
+                    </td>
+                    <!-- /ko -->
+                    <!--ko ifnot: headerText == 'Image' ||(typeof rowText == 'object' && typeof rowText.action == 'function')-->
+                    <td data-bind="text: typeof rowText == 'function' ? rowText($parent) : $parent[rowText] "></td>
+                    <!--/ko-->
+                </tr>
+            </tbody>
+        </table>
+    </script>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <img src="data:image;base64,@item.Image" width="80" height="80" />
-                </td>
-                <td>
-                    <a href="@item.ViewItemURLForNaturalSearch">@item.Title</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndTime)
-                </td>
-                <td>
-                    @Html.ActionLink(item.PrimaryCategoryName, "SaveProducts", "Home", new { param = item.PrimaryCategoryID }, null)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.ItemID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ItemID })
-                </td>
-            </tr>
-        }*@
-</table>
+    <button data-bind='click: sortByTitle'>
+        Sort by Title
+    </button>
 
-<div class='jumbotron'>
-    <div class='tableKO'>
-        <div data-bind='simpleGrid: gridViewModel'> </div>
+    <button data-bind='click: sortByPrice'>
+        Sort by Price
+    </button>
 
-        <button data-bind='click: sortByTitle'>
-            Sort by Title
-        </button>
-
-        <button data-bind='click: sortByPrimaryCategoryName'>
-            Sort by Category
-        </button>
-
-        <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
-            Jump to first page
-        </button>
-    </div>
+    <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
+        Jump to first page
+    </button>
 </div>
 
-<script src="~/App/app2.js"></script>
 <script type="text/javascript">
     var jsonData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
-    ko.applyBindings(new PagedGridModel(jsonData));
 </script>
+<script src="~/App/PagedGridModel.js"></script>

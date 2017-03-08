@@ -32,12 +32,5 @@ namespace OnlineShop.Web.Controllers
                 grabService.GrabItemsByKeyword(param);
             return RedirectToAction("Index", "Products");
         }
-
-        //[HttpPost]
-        //public ActionResult SaveProducts()
-        //{
-        //    return RedirectToAction("Index", "Products");
-        //}
-
     }
 }

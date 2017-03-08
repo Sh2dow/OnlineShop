@@ -1,0 +1,92 @@
+﻿@model IEnumerable<OnlineShop.Models.ItemFinal>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Products</h2>
+
+<table class="tableMVC">
+    @*<tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryCategoryName)
+            </th>
+            <th>
+                "Actions"
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="data:image;base64,@item.Image" width="80" height="80" />
+                </td>
+                <td>
+                    <a href="@item.ViewItemURLForNaturalSearch">@item.Title</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndTime)
+                </td>
+                <td>
+                    @Html.ActionLink(item.PrimaryCategoryName, "SaveProducts", "Home", new { param = item.PrimaryCategoryID }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ItemID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ItemID })
+                </td>
+            </tr>
+        }*@
+</table>
+
+<div class='tableKO'>
+    <table id="productsTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th id="Title">Title</th>
+                <th id="Category">Category</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Products">
+            <tr>
+                <td><img data-bind="attr: {src:'data:image;base64,' + Image}" height=80 width=80 /></td>
+                <td><a data-bind="text: Title, attr: {href: 'Products/Details?id=' + ItemID}"></a></td>
+                <td><a data-bind="text: PrimaryCategoryName, attr: {href: '/Home/SaveProducts?param=' + PrimaryCategoryID}"></a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+@*<script src="~/App/app2.js"></script>*@
+<script type="text/javascript">
+    var jsonData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    function pageModel(jsonData) {
+        var self = this;
+        self.Products = ko.observableArray(jsonData);
+    }
+
+    function Product(_image, _title, _category) {
+        var self = this;
+        self.Image = ko.observable(_image);
+        self.Title = ko.observable(_title);
+        self.PrimaryCategoryName = ko.observable(_category);
+    }
+    var vm = new pageModel(jsonData);
+    ko.applyBindings(vm);
+    //ko.applyBindings(new PagedGridModel(jsonData));
+</script>

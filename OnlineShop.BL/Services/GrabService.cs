@@ -98,7 +98,7 @@ namespace OnlineShop.BL
                 Title = item.Title,
                 ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
                 EndTime = item.EndTime,
-                Price = string.Concat(item.ConvertedCurrentPrice.Value.ToString(), " ", item.ConvertedCurrentPrice.CurrencyID),
+                Price = item.ConvertedCurrentPrice.Value,
                 PrimaryCategoryID = long.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
                 Image = Convert.ToBase64String(LoadBytesFromUrl(item.GalleryURL))
@@ -132,14 +132,5 @@ namespace OnlineShop.BL
             }
             return data;
         }
-
-        //public byte[] ConvertToBytes(HttpPostedFileBase image)
-        //{
-        //    byte[] imageBytes = null;
-        //    BinaryReader reader = new BinaryReader(image.InputStream);
-        //    imageBytes = reader.ReadBytes(image.ContentLength);
-        //    return imageBytes;
-        //}
-
     }
 }

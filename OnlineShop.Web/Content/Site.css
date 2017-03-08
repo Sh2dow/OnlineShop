@@ -28,9 +28,6 @@ textarea {
     min-width: 480px;
 }
 
-
-body { font-family: arial; font-size: 14px; }
-
 .tableKO input { font-family: Arial; }
 .tableKO b { font-weight: bold; }
 .tableKO p { margin-top: 0.9em; margin-bottom: 0.9em; }
@@ -39,7 +36,7 @@ body { font-family: arial; font-size: 14px; }
 
 .ko-grid { margin-bottom: 1em; border: 1px solid silver; background-color:White; }
 .ko-grid th { text-align:left; background-color: Black; color:White; }
-.ko-grid td, th { padding: 0.4em; }
+.ko-grid td, th { padding: 0.4em; margin: 1em }
 .ko-grid tr:nth-child(odd) { background-color: #DDD; }
 .ko-grid-pageLinks { margin-bottom: 1em; }
 .ko-grid-pageLinks a { padding: 0.5em; }

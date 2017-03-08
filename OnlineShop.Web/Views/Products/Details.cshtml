@@ -1,10 +1,5 @@
 ﻿@model OnlineShop.Models.ItemFinal
 
-@{
-    ViewBag.Title = "Details";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 <h2>Details</h2>
 
 <div>
@@ -50,10 +45,9 @@
         <dd>
             <img src="data:image;base64,@Model.Image" width="80" height="80" />
         </dd>
-
     </dl>
 </div>
+
 <p>
-    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ItemID }) |*@
     @Html.ActionLink("Back to List", "Index")
 </p>
