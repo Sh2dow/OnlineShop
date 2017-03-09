@@ -32,11 +32,11 @@
         <div class="jumbotron">
             @RenderBody()
         </div>
-        <footer>
-            <hr />
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+    <footer>
+        <hr />
+        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+    </footer>
     @*@Scripts.Render("~/bundles/app")*@
     @RenderSection("scripts", required: false)
 </body>

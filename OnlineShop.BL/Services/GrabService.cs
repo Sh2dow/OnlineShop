@@ -24,19 +24,19 @@ namespace OnlineShop.BL
 
         public void GrabItemsByKeyword(string keyword)
         {
-            GrabJson(new[] { "version=713&", "&QueryKeywords=" + keyword });
+            GrabJson(new[] { "FindPopularItems&QueryKeywords=" + keyword });
         }
 
         public void GrabItemsByCategory(long categoryId)
         {
-            GrabJson(new[] { "version=957&", "&categoryId=" + categoryId.ToString() });
+            GrabJson(new[] { "FindPopularItems&categoryId=" + categoryId.ToString() });
         }
 
         public void GrabJson(string[] input)
         {
             string appID = ConfigurationManager.AppSettings["AppID"];
-            string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-            var url = findingServerAddress + "shopping?" + input[0] + "appid=" + appID + "&callname=FindPopularItems" + input[1] + "&ResponseEncodingType=JSON";
+            string ShoppingApiAddress = ConfigurationManager.AppSettings["ShoppingApiAddress"];
+            var url = ShoppingApiAddress + "&callname=" + input[0] + "&ResponseEncodingType=JSON&appid=" + appID;
             try
             {
                 var resultStream = new MemoryStream(LoadBytesFromUrl(url));

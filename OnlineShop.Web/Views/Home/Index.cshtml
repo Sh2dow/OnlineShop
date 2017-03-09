@@ -1,24 +1,20 @@
-﻿@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<p>
-    <select data-bind="options: topCategories,
+﻿<div style="padding-top: 50px ; ">
+    <p>
+        <select data-bind="options: topCategories,
                        optionsText: 'name',
                        value: selectedCategory,
                        optionsCaption: 'Choose Category:'"></select>
-</p>
+    </p>
 
-<p>
-    <div data-bind="visible: selectedCategory">
-        You have chosen a category with id
-        <span id="selectedCategory" data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
-    </div>
-</p>
+    <p>
+        <div data-bind="visible: selectedCategory">
+            You have chosen a category with id
+            <span id="selectedCategory" data-bind="text: selectedCategory() ? selectedCategory().id : 'unknown'"></span>.
+        </div>
+    </p>
+</div>
 
 <p>
     <a href='javascript:void(0)' id="btnPush" onclick='process(vm.selectedCategory().id);' class='btn btn-primary' data-bind='visible: selectedCategory'>Proceed request</a>
 </p>
-
 <script src="~/App/Startup.js"></script>

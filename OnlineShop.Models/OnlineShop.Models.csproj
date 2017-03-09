@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="JsonParse.cs" />
+    <Compile Include="FindItemsByKeywords.cs" />
+    <Compile Include="ItemById.cs" />
+    <Compile Include="ItemsByCategory.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

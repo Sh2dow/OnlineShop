@@ -1,6 +1,8 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
+.navbar {min-height:32px !important}
+
+body {
+    padding: 0px;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -8,19 +10,32 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    margin-bottom: -25px;
 }
 
 .jumbotron {
-    min-height: 800px;
+    min-height: 900px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
-.dl-horizontal dt {
+.dl-horizontal dt, dd {
     white-space: normal;
+    padding: 0.2em;
+    font-size: large;
 }
 
+footer
+{
+    line-height: 0.1em;
+    height: 0.1em;
+    padding: 0;
+    margin: 0;
+    min-height:2px;
+}
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
@@ -30,9 +45,9 @@ textarea {
 
 .tableKO input { font-family: Arial; }
 .tableKO b { font-weight: bold; }
-.tableKO p { margin-top: 0.9em; margin-bottom: 0.9em; }
+.tableKO p { margin-top: 0.5em; margin-bottom: 0.9em; }
 .tableKO select[multiple] { width: 100%; height: 8em; }
-.tableKO h2 { margin-top: 0.4em; }
+.tableKO h2 { margin-top: 0.2em; }
 
 .ko-grid { margin-bottom: 1em; border: 1px solid silver; background-color:White; }
 .ko-grid th { text-align:left; background-color: Black; color:White; }
@@ -41,7 +56,7 @@ textarea {
 .ko-grid-pageLinks { margin-bottom: 1em; }
 .ko-grid-pageLinks a { padding: 0.5em; }
 .ko-grid-pageLinks a.selected { background-color: Black; color: White; }
-.tableKO { overflow:auto } /* Mobile Safari reflows pages slowly, so fix the height to avoid the need for reflows */
+.tableKO { overflow: auto } /* Mobile Safari reflows pages slowly, so fix the height to avoid the need for reflows */
 
 li { list-style-type: disc; margin-left: 20px; }
 

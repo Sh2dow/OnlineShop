@@ -26,7 +26,7 @@
         //{ headerText: "End time", rowText: "EndTime" },
         { headerText: "Image", rowText: function (item) { return item.Image } },
         ],
-        pageSize: 10
+        pageSize: 8
     });
 };
 
