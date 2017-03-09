@@ -34,6 +34,7 @@
         //{ name: 'Vehicle Parts & Accessories', id: 131090 },
         { name: 'Video Games & Consoles', id: 1249 },
         //{ name: 'Wholesale & Job Lots', id: 40005 },
+        { name: 'Precision & Measuring Tools', id: 43991 },
         { name: 'Everything Else', id: 99 },
     ],
     selectedCategory: ko.observable()

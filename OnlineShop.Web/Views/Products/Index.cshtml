@@ -16,12 +16,22 @@
             </thead>
             <tbody data-bind="foreach: itemsOnCurrentPage">
                 <tr data-bind="foreach: $parent.columns">
+                    <!--ko if: headerText == 'Title'-->
+                    <td>
+                        <a data-bind="text: $parent.Title, attr: {href: '/Products/Details?id=' + $parent.ItemID}" />
+                    </td>
+                    <!-- /ko -->
+                    <!--ko if: headerText == 'Category'-->
+                    <td>
+                        <a data-bind="text: $parent.PrimaryCategoryName, attr: {href: '/Home/SaveProducts?param=' + $parent.PrimaryCategoryID}" />
+                    </td>
+                    <!-- /ko -->
                     <!--ko if: headerText == 'Image'-->
                     <td>
                         <img data-bind="attr: {src:'data:image;base64,' + $parent.Image}" height=80 width=80 />
                     </td>
                     <!-- /ko -->
-                    <!--ko ifnot: headerText == 'Image' ||(typeof rowText == 'object' && typeof rowText.action == 'function')-->
+                    <!--ko ifnot: headerText == 'Image' ||  headerText == 'Category' ||  headerText == 'Title' ||(typeof rowText == 'object' && typeof rowText.action == 'function')-->
                     <td data-bind="text: typeof rowText == 'function' ? rowText($parent) : $parent[rowText] "></td>
                     <!--/ko-->
                 </tr>

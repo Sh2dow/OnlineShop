@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
@@ -9,15 +10,15 @@ namespace OnlineShop.Models
 {
     public abstract class ItemBase
     {
-        [Key, Required, JsonProperty, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, Required, JsonProperty, DatabaseGenerated(DatabaseGeneratedOption.None), DisplayName("id")]
         public string ItemID { get; set; }
         [JsonProperty]
         public string Title { get; set; }
-        [JsonProperty]
+        [JsonProperty, DisplayName("ebay Url")]
         public string ViewItemURLForNaturalSearch { get; set; }
-        [JsonProperty]
+        [JsonProperty, DisplayName("Ending time")]
         public DateTime EndTime { get; set; }
-        [JsonProperty]
+        [JsonProperty, DisplayName("Category")]
         public string PrimaryCategoryName { get; set; }
     }
 
@@ -25,7 +26,7 @@ namespace OnlineShop.Models
     {
         public string Image { get; set; }
         public double Price { get; set; }
-        [Required]
+        [Required, DisplayName("Category id")]
         public long PrimaryCategoryID { get; set; }
     }
 }

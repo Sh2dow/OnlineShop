@@ -44,3 +44,9 @@ textarea {
 .tableKO { overflow:auto } /* Mobile Safari reflows pages slowly, so fix the height to avoid the need for reflows */
 
 li { list-style-type: disc; margin-left: 20px; }
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
