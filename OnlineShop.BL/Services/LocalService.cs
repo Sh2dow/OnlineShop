@@ -2,6 +2,7 @@
 using OnlineShop.Models;
 using OnlineShop.DL;
 using OnlineShop.BL.Services.Interfaces;
+using System;
 
 namespace OnlineShop.BL.Services
 {
@@ -14,34 +15,34 @@ namespace OnlineShop.BL.Services
             repo = new ProductsRepository();
         }
 
-        public void UpdateProduct(ItemFinal product)
+        public void UpdateProduct(LocalItem product)
         {
             repo.UpdateProduct(product);
             repo.Save();
         }
 
-        public void RemoveProduct(ItemFinal product)
+        public void RemoveProduct(LocalItem product)
         {
             repo.RemoveProduct(product);
             repo.Save();
         }
 
-        public IEnumerable<ItemFinal> GetAllProducts()
+        public IEnumerable<LocalItem> GetAllProducts()
         {
             return repo.GetAllProducts();
         }
 
-        public ItemFinal GetProductById(string productId)
+        public LocalItem GetProductById(string productId)
         {
             return repo.GetProductById(productId);
         }
 
-        public IEnumerable<ItemFinal> GetProductsByCategory(long categoryId)
+        public IEnumerable<LocalItem> GetProductsByCategory(long categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }
 
-        public IEnumerable<ItemFinal> GetProductsByKeyword(string keyword)
+        public IEnumerable<LocalItem> GetProductsByKeyword(string keyword)
         {
             return repo.GetProductsByKeyword(keyword);
         }

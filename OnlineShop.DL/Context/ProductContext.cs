@@ -9,6 +9,6 @@ namespace OnlineShop.DL
         {
             
         }
-        public DbSet<ItemFinal> Products { get; set; }
+        public DbSet<LocalItem> Products { get; set; }
     }
 }

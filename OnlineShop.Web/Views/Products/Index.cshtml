@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OnlineShop.Models.ItemFinal>
+﻿@model IEnumerable<OnlineShop.Models.LocalItem>
 <div class='tableKO'>
     <div data-bind='simpleGrid: gridViewModel, simpleGridTemplate: "custom_grid_template"'></div>
     <script type="text/html" id="custom_grid_template">
@@ -22,7 +22,7 @@
                     <!-- /ko -->
                     <!--ko if: headerText == 'Image'-->
                     <td>
-                        <img data-bind="attr: {src:'data:image;base64,' + $parent.Image}" height=80 width=80 />
+                        <img data-bind="attr: {src:'data:image;base64,' + $parent.Image}" height=75 width=75 />
                     </td>
                     <!-- /ko -->
                     <!--ko ifnot: headerText == 'Image' ||  headerText == 'Category' ||  headerText == 'Title' ||(typeof rowText == 'object' && typeof rowText.action == 'function')-->

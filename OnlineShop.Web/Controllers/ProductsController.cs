@@ -10,47 +10,29 @@ namespace OnlineShop.Web.Controllers
 {
     public class ProductsController : Controller
     {
-        private LocalService fillService;
+        private LocalService localService;
 
         public ProductsController()
         {
-            fillService = new LocalService();
+            localService = new LocalService();
         }
 
         // GET: Products
-        //public ActionResult Index(int? categoryId)
-        //{
-        //    if (categoryId != null)
-        //        return View(fillService.GetProductsByCategory((int)categoryId).ToList());
-        //    else
-        //        return View(fillService.GetAllProducts().ToList());
-        //}
-
-        public ActionResult Index()
+        [HttpGet]
+        public ActionResult Index(string param)
         {
-            //var content = fillService.GetAllProducts().Select(s => new
-            //{
-            //    s.ItemID,
-            //    s.Title,
-            //    s.ViewItemURLForNaturalSearch,
-            //    s.Price,
-            //    s.PrimaryCategoryID,
-            //    s.PrimaryCategoryName,
-            //    s.Image
-            //});
-            //List<ItemFinal> items = content.Select(item => new ItemFinal()
-            //{
-            //    ItemID = item.ItemID,
-            //    Title = item.Title,
-            //    Price = item.Price,
-            //    ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
-            //    PrimaryCategoryID = item.PrimaryCategoryID,
-            //    PrimaryCategoryName = item.PrimaryCategoryName,
-            //    Image = item.Image,
-            //}).ToList();
-
-            var model = fillService.GetAllProducts();
-            return View(model);
+            long i;
+            if (long.TryParse(param, out i))
+            {
+                return View(localService.GetProductsByCategory(long.Parse(param)).ToList());
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(param))
+                    return View(localService.GetAllProducts());
+                else
+                    return View(localService.GetProductsByKeyword(param.ToString()));
+            }
         }
 
         // GET: Products/Details/5
@@ -60,7 +42,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var productView = fillService.GetProductById(id);
+            var productView = localService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -75,7 +57,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var productView = fillService.GetProductById(id);
+            var productView = localService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -88,11 +70,11 @@ namespace OnlineShop.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ItemFinal productView)
+        public ActionResult Edit(LocalItem productView)
         {
             if (ModelState.IsValid)
             {
-                fillService.UpdateProduct(productView);
+                localService.UpdateProduct(productView);
                 //fillService.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -106,7 +88,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ItemFinal productView = fillService.GetProductById(id);
+            LocalItem productView = localService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -119,8 +101,8 @@ namespace OnlineShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            ItemFinal productView = fillService.GetProductById(id);
-            fillService.RemoveProduct(productView);
+            LocalItem productView = localService.GetProductById(id);
+            localService.RemoveProduct(productView);
             return RedirectToAction("Index");
         }
     }

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 
-namespace OnlineShop.Models
+namespace OnlineShop.Models.ItemsByCategory
 {
     public class ConvertedCurrentPrice
     {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OnlineShop.Models;
 using OnlineShop.DL;
 using System.Net;
 using Newtonsoft.Json;
@@ -8,8 +7,8 @@ using OnlineShop.BL.Services.Interfaces;
 using System.Configuration;
 using System.IO;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Web;
+using OnlineShop.Models;
+using ItemsByCategory = OnlineShop.Models.ItemsByCategory;
 
 namespace OnlineShop.BL
 {
@@ -42,29 +41,29 @@ namespace OnlineShop.BL
                 var resultStream = new MemoryStream(LoadBytesFromUrl(url));
                 var reader = new StreamReader(resultStream);
                 string s = reader.ReadToEnd();
-                var arr = JsonConvert.DeserializeObject<Json>(s);
-                var items = new List<Item>();
+                var arr = JsonConvert.DeserializeObject<ItemsByCategory.Json>(s);
+                var items = new List<ItemsByCategory.Item>();
                 foreach (var obj in arr.ItemArray.Item)
                 {
-                    var item = new Item();
+                    var item = new ItemsByCategory.Item();
                     item.ItemID = obj.ItemID;
                     item.ViewItemURLForNaturalSearch = obj.ViewItemURLForNaturalSearch;
-                    item.PrimaryCategoryName = (string)obj.PrimaryCategoryName;
+                    item.PrimaryCategoryName = obj.PrimaryCategoryName;
                     item.PrimaryCategoryID = obj.PrimaryCategoryID;
                     item.Title = obj.Title;
                     item.EndTime = obj.EndTime;
-                    item.ConvertedCurrentPrice = new ConvertedCurrentPrice();
+                    item.ConvertedCurrentPrice = new ItemsByCategory.ConvertedCurrentPrice();
                     item.ConvertedCurrentPrice.CurrencyID = (string)obj.ConvertedCurrentPrice.CurrencyID;
                     item.ConvertedCurrentPrice.Value = obj.ConvertedCurrentPrice.Value;
                     item.GalleryURL = (string)obj.GalleryURL ?? "";
                     items.Add(item);
                 }
 
-                var itemsFinal = new List<ItemFinal>();
+                var itemsFinal = new List<LocalItem>();
                 foreach (var item in items)
                 {
                     if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
-                        itemsFinal.Add(ConvertToItemFinal(item));
+                        itemsFinal.Add(ConvertToLocalItem(item));
                 }
                 Debug.Print("items count: " + items.Count);
                 Debug.Print("itemsFinal count: " + itemsFinal.Count);
@@ -76,23 +75,10 @@ namespace OnlineShop.BL
             }
         }
 
-        public async void GrabJsonAsync(string[] input)
-        {
-            string appID = ConfigurationManager.AppSettings["AppID"];
-            string findingServerAddress = ConfigurationManager.AppSettings["FindingServerAddress"];
-            var url = findingServerAddress + "shopping?" + input[0] + "appid=" + appID + "&callname=FindPopularItems" + input[1] + "&ResponseEncodingType=JSON";
-
-            var request = WebRequest.Create(new Uri(url));
-            var response = (HttpWebResponse)await Task.Factory
-                .FromAsync<WebResponse>(request.BeginGetResponse,
-                                        request.EndGetResponse,
-                                        null);
-        }
-
-        public ItemFinal ConvertToItemFinal(Item item)
+        public LocalItem ConvertToLocalItem(ItemsByCategory.Item item)
         {
             Debug.Print("ItemID: " + item.ItemID);
-            return new ItemFinal
+            return new LocalItem
             {
                 ItemID = item.ItemID,
                 Title = item.Title,
@@ -111,7 +97,6 @@ namespace OnlineShop.BL
             if (string.IsNullOrEmpty(url)) return data;
             var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
             var response = (HttpWebResponse)webRequest.GetResponse();
-
             Debug.Print("webResponse.ContentLength: " + response.ContentLength);
             if (response.StatusCode == HttpStatusCode.OK)
             {

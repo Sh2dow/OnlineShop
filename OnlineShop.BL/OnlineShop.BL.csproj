@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\FillService.cs" />
+    <Compile Include="Services\LocalService.cs" />
     <Compile Include="Services\GrabService.cs" />
     <Compile Include="Services\Interfaces\ILocalService.cs" />
     <Compile Include="Services\Interfaces\IGrabService.cs" />

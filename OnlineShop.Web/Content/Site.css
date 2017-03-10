@@ -1,22 +1,29 @@
-﻿.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
-.navbar {min-height:32px !important}
+﻿.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+}
 
-body {
-    padding: 0px;
+.navbar .navbar-collapse {
+  text-align: center;
+}
+
+.navbar-nav > li > a { padding-top:5px !important; padding-bottom:5px !important; }
+.navbar { min-height:0.2em !important; vertical-align: middle; margin-bottom: 5px !important;  }
+
+container {
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 /* Set padding to keep content from hitting the edges */
-
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: -25px;
+body{
 }
 
 .jumbotron {
-    min-height: 900px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
+    min-height: 54em !important;
+    padding-top: 1em !important; 
+    padding-bottom: 1em !important; 
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -30,12 +37,15 @@ body {
 
 footer
 {
-    line-height: 0.1em;
-    height: 0.1em;
-    padding: 0;
-    margin: 0;
-    min-height:2px;
+    text-align: right;
+    background-color: #000000;
 }
+
+footer > p {
+    color: #ffffff;
+    background-color: #000000;
+}
+
 /* Set width on the form input elements since they're 100% wide by default */
 input,
 select,
@@ -48,7 +58,6 @@ textarea {
 .tableKO p { margin-top: 0.5em; margin-bottom: 0.9em; }
 .tableKO select[multiple] { width: 100%; height: 8em; }
 .tableKO h2 { margin-top: 0.2em; }
-
 .ko-grid { margin-bottom: 1em; border: 1px solid silver; background-color:White; }
 .ko-grid th { text-align:left; background-color: Black; color:White; }
 .ko-grid td, th { padding: 0.4em; margin: 1em }

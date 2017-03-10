@@ -5,9 +5,9 @@ namespace OnlineShop.BL.Services.Interfaces
 {
     public interface ILocalService
     {
-        ItemFinal GetProductById(string id);
-        IEnumerable<ItemFinal> GetAllProducts();
-        IEnumerable<ItemFinal> GetProductsByKeyword(string keyword);
-        IEnumerable<ItemFinal> GetProductsByCategory(long categoryId);
+        LocalItem GetProductById(string id);
+        IEnumerable<LocalItem> GetAllProducts();
+        IEnumerable<LocalItem> GetProductsByKeyword(string keyword);
+        IEnumerable<LocalItem> GetProductsByCategory(long categoryId);
     }
 }

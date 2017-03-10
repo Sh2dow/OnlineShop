@@ -16,7 +16,7 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
-        public void AddProducts(IEnumerable<ItemFinal> products)
+        public void AddProducts(IEnumerable<LocalItem> products)
         {
             if (products != null)
             {
@@ -38,7 +38,7 @@ namespace OnlineShop.DL
             }
         }
 
-        ItemFinal Get(ItemFinal detachedModel)
+        LocalItem Get(LocalItem detachedModel)
         {
             using (var context = new ProductContext())
             {
@@ -46,13 +46,13 @@ namespace OnlineShop.DL
             }
         }
 
-        public void UpdateProduct(ItemFinal product)
+        public void UpdateProduct(LocalItem product)
         {
             _db.Products.Attach(product);
             _db.Entry(product).State = EntityState.Modified;
         }
 
-        public void RemoveProduct(ItemFinal product)
+        public void RemoveProduct(LocalItem product)
         {
             if (product != null)
             {
@@ -60,22 +60,22 @@ namespace OnlineShop.DL
             }
         }
 
-        public IEnumerable<ItemFinal> GetAllProducts()
+        public IEnumerable<LocalItem> GetAllProducts()
         {
             return _db.Products;
         }
 
-        public IEnumerable<ItemFinal> GetProductsByCategory(long categoryId)
+        public IEnumerable<LocalItem> GetProductsByCategory(long categoryId)
         {
             return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
         }
 
-        public IEnumerable<ItemFinal> GetProductsByKeyword(string keyword)
+        public IEnumerable<LocalItem> GetProductsByKeyword(string keyword)
         {
             return _db.Products.Where(product => product.Title.Contains(keyword));
         }
 
-        public ItemFinal GetProductById(string id)
+        public LocalItem GetProductById(string id)
         {
             return _db.Products.FirstOrDefault(product => product.ItemID == id);
         }

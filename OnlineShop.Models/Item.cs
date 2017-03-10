@@ -22,7 +22,7 @@ namespace OnlineShop.Models
         public string PrimaryCategoryName { get; set; }
     }
 
-    public class ItemFinal : ItemBase
+    public class LocalItem: ItemBase
     {
         public string Image { get; set; }
         public double Price { get; set; }
