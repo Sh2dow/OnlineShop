@@ -17,6 +17,11 @@
         this.gridViewModel.currentPageIndex(0);
     };
 
+    this.jumpToLastPage = function () {
+        console.log(this.gridViewModel.currentPageIndex(Math.ceil(ko.unwrap(this.gridViewModel.data).length / this.pageSize) - 1));
+    };
+
+
     this.gridViewModel = new ko.simpleGrid.viewModel({
         data: this.items,
         columns: [

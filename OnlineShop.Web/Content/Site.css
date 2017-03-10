@@ -8,22 +8,22 @@
   text-align: center;
 }
 
-.navbar-nav > li > a { padding-top:5px !important; padding-bottom:5px !important; }
-.navbar { min-height:0.2em !important; vertical-align: middle; margin-bottom: 5px !important;  }
+.navbar-nav > li > a { padding-top:0.4em !important; padding-bottom:0.4em !important; }
+.navbar { min-height:0.2em !important; vertical-align: middle; margin-bottom: 0.2em !important;  }
 
+body{
+    background: silver;
+}
+/* Set padding to keep content from hitting the edges */
 container {
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Set padding to keep content from hitting the edges */
-body{
-}
-
 .jumbotron {
-    min-height: 54em !important;
-    padding-top: 1em !important; 
-    padding-bottom: 1em !important; 
+    min-height: 62.5em !important;
+    padding-top: 2em !important; 
+    padding-bottom: 2em !important; 
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -35,13 +35,16 @@ body{
     font-size: large;
 }
 
-footer
-{
-    text-align: right;
-    background-color: #000000;
+.footer {
+position:fixed;
+    bottom:0px;
+    height:20px;
+    left:0;
+    right:0;
 }
 
 footer > p {
+    text-align: right;
     color: #ffffff;
     background-color: #000000;
 }

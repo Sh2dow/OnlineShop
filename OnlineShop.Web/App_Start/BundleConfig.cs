@@ -17,7 +17,9 @@ namespace OnlineShop.Web
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                         "~/Scripts/knockout-{version}.js",
                         "~/Scripts/knockout.mapping-latest.js",
-                        "~/Scripts/knockout.simpleGrid.3.0.js"));
+                        //"~/Scripts/knockoutgrid.js")
+                        "~/Scripts/knockout.simpleGrid.3.0.js")
+                        );
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                         "~/App/app.js"));

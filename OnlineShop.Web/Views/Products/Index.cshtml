@@ -33,17 +33,18 @@
         </table>
     </script>
 
+    <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
+        <<
+    </button>
     <button data-bind='click: sortByTitle'>
         Sort by Title
     </button>
-
     <button data-bind='click: sortByPrice'>
         Sort by Price
     </button>
-
-    <button data-bind='click: jumpToFirstPage, enable: gridViewModel.currentPageIndex'>
-        Jump to first page
-    </button>
+    @*<button data-bind='click: jumpToLastPage, enable: gridViewModel.currentPageIndex'>
+        >>
+    </button>*@
 </div>
 
 <script type="text/javascript">
