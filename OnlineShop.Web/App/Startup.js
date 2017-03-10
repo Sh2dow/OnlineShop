@@ -40,9 +40,8 @@
     selectedCategory: ko.observable()
 };
 
-self.process = function (param) {
-    console.log('/Home/SaveProducts?param=' + param);
-    window.location = '/Home/SaveProducts?param=' + param;
+self.process = function (id) {
+    console.log(window.location = '/Home/SearchItemsByCategory?id=' + id);
 };
 
 ko.applyBindings(vm);

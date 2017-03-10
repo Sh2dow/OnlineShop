@@ -11,19 +11,19 @@
     @Scripts.Render("~/bundles/bootstrap")
 </head>
 <body>
-    <div class="navbar navbar-inverse">
-            <nav class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Products", "Index", "Products")</li>
-                    <li>
-                        <form class="form-inline my-2 my-lg-0" action="/Products" method="get">
-                            <input name="param" class="form-control input-sm" type="text" placeholder="Search by name">
-                            <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
+    <div class="navbar navbar-inverse" style="padding-left: -2em !important">
+        <nav class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="btn-toolbar">@Html.ActionLink("Home", "Index", "Home")</li>
+                <li class="btn-toolbar">@Html.ActionLink("Products", "Index", "Products")</li>
+                <li>
+                    <form class="form-inline my-2 my-lg-0" action="/Home/SearchItemsByKeyword" method="get">
+                        <input name="keyword" class="form-control input-sm" type="text" placeholder="Search by keyword" style="min-width: initial">
+                        <button class="btn btn-outline-success btn-sm" type="submit">Search</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
     </div>
     <div class="container">
         <div class="jumbotron">
@@ -33,7 +33,6 @@
     <footer class="footer">
         <p>&copy; @DateTime.Now.Year - ASP.NET Application &nbsp;&nbsp;&nbsp;&nbsp;</p>
     </footer>
-    @*@Scripts.Render("~/bundles/app")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1,10 +1,7 @@
 ﻿using System.Web.Mvc;
-using OnlineShop.Models;
-using System.Configuration;
-using System.Collections.Generic;
 using OnlineShop.BL;
 using OnlineShop.BL.Services.Interfaces;
-using Newtonsoft.Json;
+using System.Net;
 
 namespace OnlineShop.Web.Controllers
 {
@@ -23,13 +20,24 @@ namespace OnlineShop.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult SaveProducts(string param)
+        public ActionResult SearchItemsByCategory(long? id)
         {
-            long n;
-            if (long.TryParse(param, out n))
-                grabService.GrabItemsByCategory(n);
-            else
-                grabService.GrabItemsByKeyword(param);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            grabService.GrabItemsByCategory((long)id);
+            return RedirectToAction("Index", "Products");
+        }
+
+        [HttpGet]
+        public ActionResult SearchItemsByKeyword(string keyword)
+        {
+            if (keyword == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            grabService.GrabItemsByKeyword(keyword);
             return RedirectToAction("Index", "Products");
         }
     }
