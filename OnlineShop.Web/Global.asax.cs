@@ -13,8 +13,6 @@ namespace OnlineShop.Web
         {
             AreaRegistration.RegisterAllAreas();
 
-            //Database.SetInitializer<ProductContext>(null);
-
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

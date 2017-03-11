@@ -15,35 +15,35 @@ namespace OnlineShop.BL.Services
             repo = new ProductsRepository();
         }
 
-        public void UpdateProduct(LocalItem product)
+        public void UpdateProduct(StoreItem product)
         {
             repo.UpdateProduct(product);
             repo.Save();
         }
 
-        public void RemoveProduct(LocalItem product)
+        public void RemoveProduct(StoreItem product)
         {
             repo.RemoveProduct(product);
             repo.Save();
         }
 
-        public IEnumerable<LocalItem> GetAllProducts()
+        public IEnumerable<StoreItem> GetAllProducts()
         {
             return repo.GetAllProducts();
         }
 
-        public LocalItem GetProductById(string productId)
+        public StoreItem GetProductById(string productId)
         {
             var item = repo.GetProductById(productId);
             return new GrabService().ExtendItem(item);
         }
 
-        public IEnumerable<LocalItem> GetProductsByCategory(long categoryId)
+        public IEnumerable<StoreItem> GetProductsByCategory(long categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }
 
-        public IEnumerable<LocalItem> GetProductsByKeyword(string keyword)
+        public IEnumerable<StoreItem> GetProductsByKeyword(string keyword)
         {
             return repo.GetProductsByKeyword(keyword);
         }

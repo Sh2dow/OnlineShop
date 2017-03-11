@@ -3,7 +3,6 @@ using System.Web.Mvc;
 using OnlineShop.Models;
 using OnlineShop.BL.Services;
 using OnlineShop.BL.Services.Interfaces;
-using OnlineShop.BL;
 
 namespace OnlineShop.Web.Controllers
 {
@@ -58,7 +57,7 @@ namespace OnlineShop.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(LocalItem product)
+        public ActionResult Edit(StoreItem product)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +75,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            LocalItem productView = localService.GetProductById(id);
+            StoreItem productView = localService.GetProductById(id);
             if (productView == null)
             {
                 return HttpNotFound();
@@ -89,7 +88,7 @@ namespace OnlineShop.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            LocalItem productView = localService.GetProductById(id);
+            StoreItem productView = localService.GetProductById(id);
             localService.RemoveProduct(productView);
             return RedirectToAction("Index");
         }

@@ -16,7 +16,7 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
-        public void AddProduct(LocalItem product)
+        public void AddProduct(StoreItem product)
         {
             if (_db.Products.Any(e => e.ItemID == product.ItemID))
             {
@@ -31,7 +31,7 @@ namespace OnlineShop.DL
             }
         }
 
-        public void AddProducts(IEnumerable<LocalItem> products)
+        public void AddProducts(IEnumerable<StoreItem> products)
         {
             if (products != null)
             {
@@ -43,7 +43,7 @@ namespace OnlineShop.DL
             }
         }
 
-        LocalItem Get(LocalItem detachedModel)
+        StoreItem Get(StoreItem detachedModel)
         {
             using (var context = new ProductContext())
             {
@@ -51,13 +51,13 @@ namespace OnlineShop.DL
             }
         }
 
-        public void UpdateProduct(LocalItem product)
+        public void UpdateProduct(StoreItem product)
         {
             _db.Products.Attach(product);
             _db.Entry(product).State = EntityState.Modified;
         }
 
-        public void RemoveProduct(LocalItem product)
+        public void RemoveProduct(StoreItem product)
         {
             if (product != null)
             {
@@ -65,22 +65,22 @@ namespace OnlineShop.DL
             }
         }
 
-        public IEnumerable<LocalItem> GetAllProducts()
+        public IEnumerable<StoreItem> GetAllProducts()
         {
             return _db.Products;
         }
 
-        public IEnumerable<LocalItem> GetProductsByCategory(long categoryId)
+        public IEnumerable<StoreItem> GetProductsByCategory(long categoryId)
         {
             return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
         }
 
-        public IEnumerable<LocalItem> GetProductsByKeyword(string keyword)
+        public IEnumerable<StoreItem> GetProductsByKeyword(string keyword)
         {
             return _db.Products.Where(product => product.Title.Contains(keyword));
         }
 
-        public LocalItem GetProductById(string id)
+        public StoreItem GetProductById(string id)
         {
             return _db.Products.FirstOrDefault(product => product.ItemID == id);
         }

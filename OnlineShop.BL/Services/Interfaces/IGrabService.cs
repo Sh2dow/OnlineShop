@@ -8,7 +8,7 @@ namespace OnlineShop.BL.Services.Interfaces
         void GrabTopItemsByKeyword(string keyword);
         void GrabTopItemsByCategory(long categoryId);
         void GrabJsonShoppingSvc(string input);
-        LocalItem ExtendItem(LocalItem localitem);
+        StoreItem ExtendItem(StoreItem localitem);
         //LocalItem GrabJsonFindingSvc(string input);
     }
 }

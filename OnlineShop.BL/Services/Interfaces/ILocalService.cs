@@ -5,11 +5,11 @@ namespace OnlineShop.BL.Services.Interfaces
 {
     public interface ILocalService
     {
-        LocalItem GetProductById(string id);
-        IEnumerable<LocalItem> GetAllProducts();
-        IEnumerable<LocalItem> GetProductsByKeyword(string keyword);
-        IEnumerable<LocalItem> GetProductsByCategory(long categoryId);
-        void UpdateProduct(LocalItem product);
-        void RemoveProduct(LocalItem productView);
+        StoreItem GetProductById(string id);
+        IEnumerable<StoreItem> GetAllProducts();
+        IEnumerable<StoreItem> GetProductsByKeyword(string keyword);
+        IEnumerable<StoreItem> GetProductsByCategory(long categoryId);
+        void UpdateProduct(StoreItem product);
+        void RemoveProduct(StoreItem productView);
     }
 }

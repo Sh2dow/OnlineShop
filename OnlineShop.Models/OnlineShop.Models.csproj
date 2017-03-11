@@ -48,11 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FindItemsByKeywords.cs" />
-    <Compile Include="ItemsByKeywords.cs" />
-    <Compile Include="ItemById.cs" />
-    <Compile Include="ItemsByCategory.cs" />
-    <Compile Include="Item.cs" />
+    <Compile Include="Entities\ShoppingSvcItem.cs" />
+    <Compile Include="Entities\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

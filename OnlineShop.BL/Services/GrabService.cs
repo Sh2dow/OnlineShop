@@ -8,8 +8,8 @@ using System.Configuration;
 using System.IO;
 using System.Diagnostics;
 using OnlineShop.Models;
-using ItemsByCategory = OnlineShop.Models.ItemsByCategory;
-using ItemsByKeywords = OnlineShop.Models.ItemsByKeywords;
+using ShoppingItem = OnlineShop.Models.ShoppingSvcItem.Item;
+using System.Xml;
 
 namespace OnlineShop.BL
 {
@@ -39,35 +39,14 @@ namespace OnlineShop.BL
             var url = ShoppingApiAddress + "&callname=" + input + "&ResponseEncodingType=JSON&appid=" + appID;
             try
             {
-                var resultStream = new MemoryStream(LoadBytesFromUrl(url));
-                var reader = new StreamReader(resultStream);
-                string s = reader.ReadToEnd();
-                var arr = JsonConvert.DeserializeObject<ItemsByCategory.Json>(s);
-                var items = new List<ItemsByCategory.Item>();
-                foreach (var obj in arr.ItemArray.Item)
-                {
-                    var item = new ItemsByCategory.Item();
-                    item.ItemID = obj.ItemID;
-                    item.ViewItemURLForNaturalSearch = obj.ViewItemURLForNaturalSearch;
-                    item.PrimaryCategoryName = obj.PrimaryCategoryName;
-                    item.PrimaryCategoryID = obj.PrimaryCategoryID;
-                    item.Title = obj.Title;
-                    item.EndTime = obj.EndTime;
-                    item.ConvertedCurrentPrice = new ItemsByCategory.ConvertedCurrentPrice();
-                    item.ConvertedCurrentPrice.CurrencyID = obj.ConvertedCurrentPrice.CurrencyID;
-                    item.ConvertedCurrentPrice.Value = obj.ConvertedCurrentPrice.Value;
-                    item.GalleryURL = obj.GalleryURL ?? "";
-                    items.Add(item);
-                }
-
-                var itemsFinal = new List<LocalItem>();
+                var arr = GetDataFromWebClient<Models.ShoppingSvcItem.Json>(url);
+                var items = arr.ItemArray.Items;
+                var itemsFinal = new List<StoreItem>();
                 foreach (var item in items)
                 {
                     if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
-                        itemsFinal.Add(ConvertJsonShoppingSvcToLocalItem(item));
+                        itemsFinal.Add(ConvertJsonShoppingSvcToStoreItem(item));
                 }
-                Debug.Print("items count: " + items.Count);
-                Debug.Print("itemsFinal count: " + itemsFinal.Count);
                 repo.AddProducts(itemsFinal);
             }
             catch (Exception ex)
@@ -76,10 +55,10 @@ namespace OnlineShop.BL
             }
         }
 
-        public LocalItem ConvertJsonShoppingSvcToLocalItem(ItemsByCategory.Item item)
+        public StoreItem ConvertJsonShoppingSvcToStoreItem(ShoppingItem item)
         {
             Debug.Print("ItemID: " + item.ItemID);
-            return new LocalItem
+            return new StoreItem
             {
                 ItemID = item.ItemID,
                 Title = item.Title,
@@ -92,35 +71,37 @@ namespace OnlineShop.BL
             };
         }
 
-        public LocalItem ExtendItem(LocalItem localitem)
+        public StoreItem ExtendItem(StoreItem localitem)
         {
             string appID = ConfigurationManager.AppSettings["AppID"];
             string FindingApiAddress = ConfigurationManager.AppSettings["FindingApiAddress"];
-            var url = FindingApiAddress + "&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title + "&sortOrder=startTime&RESPONSE-DATA-FORMAT=JSON&SECURITY-APPNAME=" + appID;
+            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&REST-PAYLOAD&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
             try
             {
-                var resultStream = new MemoryStream(LoadBytesFromUrl(url));
-                var reader = new StreamReader(resultStream);
-                string s = reader.ReadToEnd();
-                var arr = JsonConvert.DeserializeObject<ItemsByKeywords.SearchResult>(s);
-                localitem.PriceArray = new Dictionary<DateTime, string>();
-                foreach (var obj in arr.Item)
+                XmlDocument doc = new XmlDocument();
+                doc.Load(url);
+                XmlNamespaceManager manager = new XmlNamespaceManager(doc.NameTable);
+                manager.AddNamespace("ns", doc.DocumentElement.NamespaceURI);
+                foreach (XmlNode node in doc.SelectNodes("//ns:item", manager))
                 {
-                    var key = new DateTime();
-                    var val = "";
-                    if (obj.ItemId == localitem.ItemID) { localitem.galleryPlusPictureURL = Convert.ToBase64String(LoadBytesFromUrl(obj.GalleryPlusPictureURL)); }
-                    foreach (var sellingStatus in obj.SellingStatus)
+                    string pakey = "", pavalue = "";
+                    if (localitem.ItemID == node["itemId"].InnerText && !(node["galleryPlusPictureURL"] == null) && !string.IsNullOrEmpty(node["galleryPlusPictureURL"].InnerText))
                     {
-                        foreach (var currentPrice in sellingStatus.CurrentPrice)
-                        {
-                            val = currentPrice.Value;
-                        }
+                        localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["galleryPlusPictureURL"].InnerText));
                     }
-                    foreach (var listingInfo in obj.ListingInfo)
+                    foreach (XmlNode listingInfo in doc.SelectNodes("//ns:listingInfo", manager))
                     {
-                        key = listingInfo.StartTime;
+                        pakey = listingInfo["startTime"].InnerText;
                     }
-                    localitem.PriceArray.Add(key, val);
+                    foreach (XmlNode listingInfo in doc.SelectNodes("//ns:sellingStatus", manager))
+                    {
+                        pavalue = listingInfo["convertedCurrentPrice"].InnerText;
+                    }
+
+                    if (!localitem.PriceArray.ContainsKey(Convert.ToDateTime(pakey)))
+                    {
+                        localitem.PriceArray.Add(Convert.ToDateTime(pakey), pavalue);
+                    }
                 }
                 repo.AddProduct(localitem);
                 repo.Save();
@@ -132,13 +113,21 @@ namespace OnlineShop.BL
             return localitem;
         }
 
+        public static T GetDataFromWebClient<T>(string _url)
+        {
+            using (var webClient = new WebClient())
+            {
+                webClient.BaseAddress = _url;
+                return JsonConvert.DeserializeObject<T>(webClient.DownloadString(_url));
+            }
+        }
+
         public byte[] LoadBytesFromUrl(string url)
         {
             byte[] data = new byte[0];
             if (string.IsNullOrEmpty(url)) return data;
             var webRequest = (HttpWebRequest)WebRequest.Create(new Uri(url));
             var response = (HttpWebResponse)webRequest.GetResponse();
-            Debug.Print("webResponse.ContentLength: " + response.ContentLength);
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 using (var mstrm = new MemoryStream())
