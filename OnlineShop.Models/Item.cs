@@ -25,8 +25,10 @@ namespace OnlineShop.Models
     public class LocalItem: ItemBase
     {
         public string Image { get; set; }
+        public string galleryPlusPictureURL { get; set; }
         public double Price { get; set; }
         [Required, DisplayName("Category id")]
         public long PrimaryCategoryID { get; set; }
+        public Dictionary<DateTime, string> PriceArray { get; set; }
     }
 }

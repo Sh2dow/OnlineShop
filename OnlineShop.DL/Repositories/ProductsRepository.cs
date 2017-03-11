@@ -16,23 +16,28 @@ namespace OnlineShop.DL
             _db = new ProductContext();
         }
 
+        public void AddProduct(LocalItem product)
+        {
+            if (_db.Products.Any(e => e.ItemID == product.ItemID))
+            {
+                Debug.Print("Updating entity id: " + product.ItemID);
+                _db.Products.Attach(product);
+                _db.Entry(product).State = EntityState.Modified;
+            }
+            else
+            {
+                _db.Products.Attach(product);
+                _db.Products.Add(product);
+            }
+        }
+
         public void AddProducts(IEnumerable<LocalItem> products)
         {
             if (products != null)
             {
                 foreach (var product in products)
                 {
-                    if (_db.Products.Any(e => e.ItemID == product.ItemID))
-                    {
-                        Debug.Print("Updating entity id: " + product.ItemID);
-                        _db.Products.Attach(product);
-                        _db.Entry(product).State = EntityState.Modified;
-                    }
-                    else
-                    {
-                        _db.Products.Attach(product);
-                        _db.Products.Add(product);
-                    }
+                    AddProduct(product);
                 }
                 _db.SaveChanges();
             }

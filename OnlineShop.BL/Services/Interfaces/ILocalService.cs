@@ -9,5 +9,7 @@ namespace OnlineShop.BL.Services.Interfaces
         IEnumerable<LocalItem> GetAllProducts();
         IEnumerable<LocalItem> GetProductsByKeyword(string keyword);
         IEnumerable<LocalItem> GetProductsByCategory(long categoryId);
+        void UpdateProduct(LocalItem product);
+        void RemoveProduct(LocalItem productView);
     }
 }

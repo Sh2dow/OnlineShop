@@ -26,7 +26,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            grabService.GrabItemsByCategory((long)id);
+            grabService.GrabTopItemsByCategory((long)id);
             return RedirectToAction("Index", "Products");
         }
 
@@ -37,7 +37,7 @@ namespace OnlineShop.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            grabService.GrabItemsByKeyword(keyword);
+            grabService.GrabTopItemsByKeyword(keyword);
             return RedirectToAction("Index", "Products");
         }
     }

@@ -1,16 +1,15 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
 using OnlineShop.Models;
 using OnlineShop.BL.Services;
-using System.Collections.Generic;
+using OnlineShop.BL.Services.Interfaces;
+using OnlineShop.BL;
 
 namespace OnlineShop.Web.Controllers
 {
     public class ProductsController : Controller
     {
-        private LocalService localService;
+        private ILocalService localService;
 
         public ProductsController()
         {
@@ -19,20 +18,9 @@ namespace OnlineShop.Web.Controllers
 
         // GET: Products
         [HttpGet]
-        public ActionResult Index(string param)
+        public ActionResult Index()
         {
-            long i;
-            if (long.TryParse(param, out i))
-            {
-                return View(localService.GetProductsByCategory(long.Parse(param)).ToList());
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(param))
-                    return View(localService.GetAllProducts());
-                else
-                    return View(localService.GetProductsByKeyword(param.ToString()));
-            }
+            return View(localService.GetAllProducts());
         }
 
         // GET: Products/Details/5
@@ -70,15 +58,15 @@ namespace OnlineShop.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(LocalItem productView)
+        public ActionResult Edit(LocalItem product)
         {
             if (ModelState.IsValid)
             {
-                localService.UpdateProduct(productView);
+                localService.UpdateProduct(product);
                 //fillService.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(productView);
+            return View(product);
         }
 
         // GET: Products/Delete/5

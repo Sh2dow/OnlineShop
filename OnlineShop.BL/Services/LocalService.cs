@@ -34,7 +34,8 @@ namespace OnlineShop.BL.Services
 
         public LocalItem GetProductById(string productId)
         {
-            return repo.GetProductById(productId);
+            var item = repo.GetProductById(productId);
+            return new GrabService().ExtendItem(item);
         }
 
         public IEnumerable<LocalItem> GetProductsByCategory(long categoryId)

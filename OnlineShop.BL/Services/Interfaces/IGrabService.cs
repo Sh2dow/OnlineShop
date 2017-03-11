@@ -5,8 +5,10 @@ namespace OnlineShop.BL.Services.Interfaces
 {
     public interface IGrabService
     {
-        void GrabItemsByKeyword(string keyword);
-        void GrabItemsByCategory(long categoryId);
-        void GrabJson(string[] input);
+        void GrabTopItemsByKeyword(string keyword);
+        void GrabTopItemsByCategory(long categoryId);
+        void GrabJsonShoppingSvc(string input);
+        LocalItem ExtendItem(LocalItem localitem);
+        //LocalItem GrabJsonFindingSvc(string input);
     }
 }
