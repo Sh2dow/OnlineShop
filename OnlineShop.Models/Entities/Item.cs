@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace OnlineShop.Models
 {
@@ -30,14 +31,33 @@ namespace OnlineShop.Models
 
     public class StoreItem : ItemBase
     {
-        public StoreItem()
-        {
-            PriceArray = new Dictionary<DateTime, string>();
-        }
+        //public StoreItem()
+        //{
+        //    List<DataPoint> PriceArray = new List<DataPoint>();
+        //}
         public string Image { get; set; }
         public double Price { get; set; }
         [Required, DisplayName("Category id")]
         public long PrimaryCategoryID { get; set; }
-        public Dictionary<DateTime, string> PriceArray { get; set; }
+        public List<DataPoint> PriceArray { get; set; }
+    }
+
+    [DataContract]
+    public class DataPoint
+    {
+        public DataPoint(string label, double y)
+        {
+            this.Label = label;
+            this.Y = y;
+        }
+
+        //Explicitly setting the name to be used while serializing to JSON. 
+        [Key]
+        [DataMember(Name = "label")]
+        public string Label { get; set; }
+
+        //Explicitly setting the name to be used while serializing to JSON.
+        [DataMember(Name = "y")]
+        public double Y { get; set; }
     }
 }

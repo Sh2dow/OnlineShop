@@ -11,6 +11,8 @@ using OnlineShop.Models;
 using ShoppingItem = OnlineShop.Models.ShoppingSvcItem.Item;
 using System.Xml;
 using HtmlAgilityPack;
+using System.Linq;
+using System.Globalization;
 
 namespace OnlineShop.BL
 {
@@ -117,13 +119,22 @@ namespace OnlineShop.BL
                                 localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["pictureURLLarge"].InnerText));
                             }
                         }
+
                         if (node["listingInfo"]["startTime"] != null && node["sellingStatus"]["convertedCurrentPrice"] != null)
                         {
-                            string testval;
-                            localitem.PriceArray.TryGetValue(Convert.ToDateTime(node["listingInfo"]["startTime"].InnerText), out testval);
-                            if (testval == null)
+                            var date = node["listingInfo"]["startTime"].InnerText;
+                            var price = node["sellingStatus"]["convertedCurrentPrice"].InnerText;
+                            var dprice = double.Parse(price, CultureInfo.InvariantCulture);
+                            var priceitem = new DataPoint(date, dprice);
+
+                            if (localitem.PriceArray == null)
                             {
-                                localitem.PriceArray.Add(Convert.ToDateTime(node["listingInfo"]["startTime"].InnerText), node["sellingStatus"]["convertedCurrentPrice"].InnerText);
+                                localitem.PriceArray = new List<DataPoint>();
+                                localitem.PriceArray.Add(priceitem);
+                            }
+                            else if (localitem.PriceArray.Any(x => x.Label != date))
+                            {
+                                localitem.PriceArray.Add(priceitem);
                             }
                         }
                     }

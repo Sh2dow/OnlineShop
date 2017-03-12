@@ -34,7 +34,7 @@ container {
 .dl-horizontal dt, dd {
     white-space: initial;
     padding: 0.1em;
-    text-align: start
+    /*text-align: start*/
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
@@ -86,3 +86,19 @@ footer > p {
     padding-top:0.2em !important; 
     padding-bottom:0.2em !important; 
 }
+
+/*.canvasjs-chart-canvas {
+    position: relative !important;
+}
+.canvasjs-chart-toolbar {
+    position: relative !important;
+}
+.canvasjs-chart-tooltip {
+    position: relative !important;
+}
+.canvasjs-chart-credit {
+    position: relative !important;
+}*/
+
+
+
