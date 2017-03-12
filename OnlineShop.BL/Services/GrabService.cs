@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using OnlineShop.BL.Services.Interfaces;
 using System.Configuration;
 using System.IO;
-using System.Diagnostics;
 using OnlineShop.Models;
 using ShoppingItem = OnlineShop.Models.ShoppingSvcItem.Item;
 using System.Xml;
@@ -48,9 +47,8 @@ namespace OnlineShop.BL
                 var result = GetDataFromWebClient<Models.ShoppingSvcItem.SingleItem>(url);
                 return ConvertJsonShoppingSvcToStoreItem(result.Item);
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.Print("ExceptionMessage: " + ex.Message.ToString());
                 return localitem;
             }
         }
@@ -71,15 +69,11 @@ namespace OnlineShop.BL
                 repo.AddProducts(itemsFinal);
                 repo.Save();
             }
-            catch (Exception ex)
-            {
-                Debug.Print("ExceptionMessage: " + ex.Message.ToString());
-            }
+            catch{}
         }
 
         public StoreItem ConvertJsonShoppingSvcToStoreItem(ShoppingItem item)
         {
-            Debug.Print("ItemID: " + item.ItemID);
             return new StoreItem
             {
                 ItemID = item.ItemID,
@@ -90,14 +84,14 @@ namespace OnlineShop.BL
                 Price = item.ConvertedCurrentPrice.Value,
                 PrimaryCategoryID = long.Parse(item.PrimaryCategoryID),
                 PrimaryCategoryName = item.PrimaryCategoryName,
-                Image = Convert.ToBase64String(LoadBytesFromUrl(item.GalleryURL))
+                Image = Convert.ToBase64String(LoadBytesFromUrl(item.PictureURL != null && item.PictureURL.Count > 0 ? item.PictureURL[0] : item.GalleryURL))
             };
         }
 
         public StoreItem ExpandItem(StoreItem localitem)
         {
             localitem = GrabSingleItem(localitem); //just to fill up description
-            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&REST-PAYLOAD&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
+            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
             try
             {
                 XmlDocument doc = new XmlDocument();
@@ -108,22 +102,11 @@ namespace OnlineShop.BL
                 {
                     foreach (XmlNode node in nodes.SelectNodes("//ns:item", manager))
                     {
-                        if (node["itemId"].InnerText == localitem.ItemID)
-                        {
-                            if (node["galleryPlusPictureURL"] != null && !string.IsNullOrEmpty(node["galleryPlusPictureURL"].InnerText))
-                            {
-                                localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["galleryPlusPictureURL"].InnerText));
-                            }
-                            else if (node["pictureURLLarge"] != null && !string.IsNullOrEmpty(node["pictureURLLarge"].InnerText))
-                            {
-                                localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["pictureURLLarge"].InnerText));
-                            }
-                        }
-
                         if (node["listingInfo"]["startTime"] != null && node["sellingStatus"]["convertedCurrentPrice"] != null)
                         {
                             var date = node["listingInfo"]["startTime"].InnerText;
                             var price = node["sellingStatus"]["convertedCurrentPrice"].InnerText;
+
                             var dprice = double.Parse(price, CultureInfo.InvariantCulture);
                             var priceitem = new DataPoint(date, dprice);
 
@@ -136,16 +119,14 @@ namespace OnlineShop.BL
                             {
                                 localitem.PriceArray.Add(priceitem);
                             }
+                            localitem.PriceArray.Sort((x, nx) => DateTime.Compare(Convert.ToDateTime(x.Label), Convert.ToDateTime(nx.Label)));
                         }
                     }
                 }
                 repo.UpdateProduct(localitem);
                 repo.Save();
             }
-            catch (Exception ex)
-            {
-                Debug.Print("ExceptionMessage: " + ex.Message.ToString());
-            }
+            catch{}
             return localitem;
         }
 

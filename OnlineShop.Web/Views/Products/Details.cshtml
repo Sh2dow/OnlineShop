@@ -6,38 +6,38 @@
 </div>
 
 <hr />
-<div id="else" style="position:relative; display: flex">
+<div id="other" style="position:relative; display: flex">
     <div style="height: 320px; width: 320px">
         <img data-bind="attr: {src:'data:image;base64,' + Image}" min-height="120" min-width="120" style="max-height: 320px; max-width: 320px" />
     </div>
     <div>
         <dl class="dl-horizontal" style="justify-content: flex-end;">
             <dt>
-                <span id="ViewItemURLForNaturalSearch">eBay Url</span>
+                <span id="ViewItemURLForNaturalSearch">link:</span>
             </dt>
             <dd>
                 <span><a data-bind="text: Title, attr: {href: ViewItemURLForNaturalSearch}"></a></span>
             </dd>
             <dt>
-                <span id="ItemID">ItemID</span>
+                <span id="ItemID">item id:</span>
             </dt>
             <dd>
                 <span data-bind="text: ItemID"></span>
             </dd>
             <dt>
-                <span id="Price">Price</span>
+                <span id="Price">Current price:</span>
             </dt>
             <dd>
                 <span data-bind="text: '$' + Price.toFixed(2)"></span>
             </dd>
             <dt>
-                <span id="EndTime">Ending time</span>
+                <span id="EndTime">Ending time:</span>
             </dt>
             <dd>
-                <span data-bind="text: EndTime"></span>
+                <span data-bind="text: new Date(EndTime)"></span>
             </dd>
             <dt>
-                <span id="Category">Category</span>
+                <span id="Category">Category:</span>
             </dt>
             <dd>
                 <span><a data-bind="text: PrimaryCategoryName, attr: { href: '/Home/SaveProducts?param=' + PrimaryCategoryID }"></a></span>
@@ -45,19 +45,17 @@
         </dl>
     </div>
 </div>
-
 <div style="vertical-align: bottom">
     <span id="Description" class="center">Description</span>
     <iframe srcdoc="@Html.Raw(Model.Description)" class="DescriptionFrame"></iframe>
 </div>
 <script src="~/App/canvasjs.min.js"></script>
-@*<script src="~/App/ChartData.js"></script>*@
 <script type="text/javascript">
     var jsonData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
     ko.applyBindings(jsonData, document.getElementById("up"));
 
     var chart = new CanvasJS.Chart("chartContainer", {
-        theme: "theme1",
+        theme: "theme2",
         animationEnabled: true,
         title: {
             text: "Time",
@@ -76,31 +74,9 @@
         data: [
         {
             type: "area",
-            //dataPoints: [
-            //    { x: new Date('2014-11-11T20:42:26+02:00'), y: 2600 },
-            //    { x: new Date('2015-11-05T20:44:18+02:00'), y: 3800 },
-            //    { x: new Date('2016-11-07T16:14:34+02:00'), y: 4300 },
-            //    { x: new Date('2017-03-01T19:15:42+02:00'), y: 2900 },
-            //    { x: new Date('2017-03-06T00:32:57+02:00'), y: 4100 }
-            //]
-
-            //dataPoints: [
-            //    { x: new Date("2014-11-11T20:42:26+02:00"), y: "19.99" },
-            //    { x: new Date("2015-11-05T20:44:18+02:00"), y: "44.39" },
-            //    { x: new Date("2016-11-07T16:14:34+02:00"), y: "29.99" }
-
-            //{ x: new Date("2014-12-05T18:44:18.000Z"), y: "19.99" },
-            //{ x: new Date("2016-11-05T18:44:18.000Z"), y: "44.39" },
-            //{ x: new Date("2015-11-05T18:44:18.000Z"), y: "29.99" }
-            //]
-
-            //You can add dynamic data from the controller as shown below. Check the controller and uncomment the line which generates dataPoints.
-            //dataPoints: @Html.Raw(ViewBag.DataPoints),
             dataPoints: jsonData["PriceArray"],
         }
         ]
     });
     chart.render();
-    //var koModel = new KoModel(jsonData["PriceArray"]);
-    //ko.applyBindings(koModel, document.getElementById("down"));
 </script>

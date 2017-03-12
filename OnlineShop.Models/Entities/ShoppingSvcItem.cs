@@ -13,12 +13,18 @@ namespace OnlineShop.Models.ShoppingSvcItem
 
     public class Item: ItemBase
     {
+        public Item()
+        {
+            PictureURL = new List<string>();
+        }
         [Required, JsonProperty]
         public string PrimaryCategoryID { get; set; }
         [JsonProperty]
         public string ListingType { get; set; }
         [JsonProperty]
         public string GalleryURL { get; set; }
+        [JsonProperty]
+        public List<string> PictureURL { get; set; }
         [JsonProperty]
         public string BidCount { get; set; }
         [JsonProperty]

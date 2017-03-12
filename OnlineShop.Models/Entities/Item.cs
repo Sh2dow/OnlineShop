@@ -21,20 +21,19 @@ namespace OnlineShop.Models
         public string Description { get; set; }
         [JsonProperty]
         public string Title { get; set; }
+
         [JsonProperty, DisplayName("ebay Url")]
         public string ViewItemURLForNaturalSearch { get; set; }
+
         [JsonProperty, DisplayName("Ending time")]
         public DateTime EndTime { get; set; }
+
         [JsonProperty, DisplayName("Category")]
         public string PrimaryCategoryName { get; set; }
     }
 
     public class StoreItem : ItemBase
     {
-        //public StoreItem()
-        //{
-        //    List<DataPoint> PriceArray = new List<DataPoint>();
-        //}
         public string Image { get; set; }
         public double Price { get; set; }
         [Required, DisplayName("Category id")]
