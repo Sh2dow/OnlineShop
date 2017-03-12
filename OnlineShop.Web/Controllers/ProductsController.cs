@@ -37,6 +37,12 @@ namespace OnlineShop.Web.Controllers
             return View(productView);
         }
 
+        [ChildActionOnly]
+        public ActionResult ShowDescription(string html)
+        {
+            return PartialView(html);
+        }
+
         // GET: Products/Edit/5
         public ActionResult Edit(string id)
         {

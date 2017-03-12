@@ -1,8 +1,8 @@
 ﻿@model OnlineShop.Models.StoreItem
 
-<div>
+<div style="display: flex" id="up">
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal" style="justify-content: flex-start; line-height: 44px !important">
         <dt>
             <span id="ViewItemURLForNaturalSearch">eBay Url</span>
         </dt>
@@ -33,15 +33,43 @@
         <dd>
             <span><a data-bind="text: PrimaryCategoryName, attr: { href: '/Home/SaveProducts?param=' + PrimaryCategoryID }"></a></span>
         </dd>
+    </dl>
+    <div class="dl-horizontal" style="justify-content: flex-end">
+        <span><img data-bind="attr: {src:'data:image;base64,' + Image}" min-height="120" min-width="120" style="max-height: 320px; max-width: 320px" /></span>
+    </div>
+</div>
+<div id="down">
+    <dl class="dl-horizontal">
         <dt>
-            <span id="Image">Image</span>
+            <span id="Price dynamics">Price dynamics</span>
         </dt>
         <dd>
-            <span><img data-bind="attr: {src:'data:image;base64,' + Image}" /></span>
+            <canvas width="300" height="150" data-bind="chartType: 'Line',
+    lineClick: alertJson,
+
+                                        chartData: lineData,
+                                        chartOptions : {
+                                            animation : true,
+                                            showTooltips: true,
+                                            segmentShowStroke : true,
+                                                segmentStrokeColor: '#222222'"></canvas>
+            <p>
+                @*<button data-bind="click: setLineData1">Line Data 1</button>
+                <button data-bind="click: setLineData2">Line Data 2</button>*@
+            </p>
+
         </dd>
     </dl>
 </div>
 
+<span id="Description" class="center">Description</span>
+<iframe srcdoc="@Html.Raw(Model.Description)" class="DescriptionFrame"></iframe>
+
+<script src="~/App/ChartControl.js"></script>
+<script src="~/App/ChartData.js"></script>
 <script type="text/javascript">
-    ko.applyBindings(@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)));
+    var jsonData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+    ko.applyBindings(jsonData, document.getElementById("up"));
+    var koModel = new KoModel(jsonData["PriceArray"]);
+    ko.applyBindings(koModel, document.getElementById("down"));
 </script>

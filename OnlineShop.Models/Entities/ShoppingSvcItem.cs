@@ -39,4 +39,11 @@ namespace OnlineShop.Models.ShoppingSvcItem
     {
         public ItemArray ItemArray { get; set; }
     }
+
+    public class SingleItem
+    {
+
+        [JsonProperty("Item")]
+        public Item Item { get; set; }
+    }
 }

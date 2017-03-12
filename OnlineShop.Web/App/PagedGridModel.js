@@ -28,7 +28,6 @@
         { headerText: "Title", rowText: "Title" },
         { headerText: "Price", rowText: function (item) { return "$" + item.Price.toFixed(2) } , cellStyle: { textAlign: "center" } },
         { headerText: "Category", rowText: "PrimaryCategoryName" },
-        //{ headerText: "End time", rowText: "EndTime" },
         { headerText: "Image", rowText: function (item) { return item.Image } },
         ],
         pageSize: 8

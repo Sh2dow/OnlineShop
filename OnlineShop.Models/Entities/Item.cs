@@ -17,6 +17,8 @@ namespace OnlineShop.Models
         [DisplayName("id")]
         public string ItemID { get; set; }
         [JsonProperty]
+        public string Description { get; set; }
+        [JsonProperty]
         public string Title { get; set; }
         [JsonProperty, DisplayName("ebay Url")]
         public string ViewItemURLForNaturalSearch { get; set; }

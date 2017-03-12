@@ -39,7 +39,6 @@ namespace OnlineShop.DL
                 {
                     AddProduct(product);
                 }
-                _db.SaveChanges();
             }
         }
 

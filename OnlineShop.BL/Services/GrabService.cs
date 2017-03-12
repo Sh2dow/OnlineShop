@@ -10,15 +10,22 @@ using System.Diagnostics;
 using OnlineShop.Models;
 using ShoppingItem = OnlineShop.Models.ShoppingSvcItem.Item;
 using System.Xml;
+using HtmlAgilityPack;
 
 namespace OnlineShop.BL
 {
     public class GrabService : IGrabService
     {
         private ProductsRepository repo;
+        string appID;
+        string FindingApiAddress;
+        string ShoppingApiAddress;
 
         public GrabService()
         {
+            appID = ConfigurationManager.AppSettings["AppID"];
+            FindingApiAddress = ConfigurationManager.AppSettings["FindingApiAddress"];
+            ShoppingApiAddress = ConfigurationManager.AppSettings["ShoppingApiAddress"];
             repo = new ProductsRepository();
         }
 
@@ -31,11 +38,23 @@ namespace OnlineShop.BL
         {
             GrabJsonShoppingSvc("FindPopularItems&categoryId=" + id.ToString());
         }
+        public StoreItem GrabSingleItem(StoreItem localitem)
+        {
+            var url = ShoppingApiAddress + "&callname=GetSingleItem&IncludeSelector=Description&ItemID=" + localitem.ItemID + "&ResponseEncodingType=JSON&appid=" + appID;
+            try
+            {
+                var result = GetDataFromWebClient<Models.ShoppingSvcItem.SingleItem>(url);
+                return ConvertJsonShoppingSvcToStoreItem(result.Item);
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("ExceptionMessage: " + ex.Message.ToString());
+                return localitem;
+            }
+        }
 
         public void GrabJsonShoppingSvc(string input)
         {
-            string appID = ConfigurationManager.AppSettings["AppID"];
-            string ShoppingApiAddress = ConfigurationManager.AppSettings["ShoppingApiAddress"];
             var url = ShoppingApiAddress + "&callname=" + input + "&ResponseEncodingType=JSON&appid=" + appID;
             try
             {
@@ -48,6 +67,7 @@ namespace OnlineShop.BL
                         itemsFinal.Add(ConvertJsonShoppingSvcToStoreItem(item));
                 }
                 repo.AddProducts(itemsFinal);
+                repo.Save();
             }
             catch (Exception ex)
             {
@@ -62,6 +82,7 @@ namespace OnlineShop.BL
             {
                 ItemID = item.ItemID,
                 Title = item.Title,
+                Description = (item.Description != null ? HtmlDocument.HtmlEncode(item.Description) : ""),
                 ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
                 EndTime = item.EndTime,
                 Price = item.ConvertedCurrentPrice.Value,
@@ -71,39 +92,43 @@ namespace OnlineShop.BL
             };
         }
 
-        public StoreItem ExtendItem(StoreItem localitem)
+        public StoreItem ExpandItem(StoreItem localitem)
         {
-            string appID = ConfigurationManager.AppSettings["AppID"];
-            string FindingApiAddress = ConfigurationManager.AppSettings["FindingApiAddress"];
-            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&REST-PAYLOAD&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
+            localitem = GrabSingleItem(localitem); //just to fill up description
+            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&REST-PAYLOAD&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
             try
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(url);
                 XmlNamespaceManager manager = new XmlNamespaceManager(doc.NameTable);
                 manager.AddNamespace("ns", doc.DocumentElement.NamespaceURI);
-                foreach (XmlNode node in doc.SelectNodes("//ns:item", manager))
+                foreach (XmlNode nodes in doc.SelectNodes("//ns:searchResult", manager))
                 {
-                    string pakey = "", pavalue = "";
-                    if (localitem.ItemID == node["itemId"].InnerText && !(node["galleryPlusPictureURL"] == null) && !string.IsNullOrEmpty(node["galleryPlusPictureURL"].InnerText))
+                    foreach (XmlNode node in nodes.SelectNodes("//ns:item", manager))
                     {
-                        localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["galleryPlusPictureURL"].InnerText));
-                    }
-                    foreach (XmlNode listingInfo in doc.SelectNodes("//ns:listingInfo", manager))
-                    {
-                        pakey = listingInfo["startTime"].InnerText;
-                    }
-                    foreach (XmlNode listingInfo in doc.SelectNodes("//ns:sellingStatus", manager))
-                    {
-                        pavalue = listingInfo["convertedCurrentPrice"].InnerText;
-                    }
-
-                    if (!localitem.PriceArray.ContainsKey(Convert.ToDateTime(pakey)))
-                    {
-                        localitem.PriceArray.Add(Convert.ToDateTime(pakey), pavalue);
+                        if (node["itemId"].InnerText == localitem.ItemID)
+                        {
+                            if (node["galleryPlusPictureURL"] != null && !string.IsNullOrEmpty(node["galleryPlusPictureURL"].InnerText))
+                            {
+                                localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["galleryPlusPictureURL"].InnerText));
+                            }
+                            else if (node["pictureURLLarge"] != null && !string.IsNullOrEmpty(node["pictureURLLarge"].InnerText))
+                            {
+                                localitem.Image = Convert.ToBase64String(LoadBytesFromUrl(node["pictureURLLarge"].InnerText));
+                            }
+                        }
+                        if (node["listingInfo"]["startTime"] != null && node["sellingStatus"]["convertedCurrentPrice"] != null)
+                        {
+                            string testval;
+                            localitem.PriceArray.TryGetValue(Convert.ToDateTime(node["listingInfo"]["startTime"].InnerText), out testval);
+                            if (testval == null)
+                            {
+                                localitem.PriceArray.Add(Convert.ToDateTime(node["listingInfo"]["startTime"].InnerText), node["sellingStatus"]["convertedCurrentPrice"].InnerText);
+                            }
+                        }
                     }
                 }
-                repo.AddProduct(localitem);
+                repo.UpdateProduct(localitem);
                 repo.Save();
             }
             catch (Exception ex)

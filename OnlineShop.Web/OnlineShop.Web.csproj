@@ -323,6 +323,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App\ChartData.js" />
+    <Content Include="App\ChartControl.js" />
     <Content Include="App\PagedGridModel.js" />
     <Content Include="App\Startup.js" />
     <Content Include="Content\bootstrap-theme.css" />
