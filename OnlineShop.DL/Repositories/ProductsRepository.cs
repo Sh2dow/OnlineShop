@@ -66,9 +66,10 @@ namespace OnlineShop.DL
             return _db.Products;
         }
 
-        public IEnumerable<StoreItem> GetProductsByCategory(long categoryId)
+        public IEnumerable<StoreItem> GetProductsByCategory(string categoryId)
         {
-            return _db.Products.Where(product => product.PrimaryCategoryID.Equals(categoryId));
+            var result = _db.Products.Where(product => product.PrimaryCategoryID.Contains(categoryId));
+            return (result.Count() == 0 ? GetAllProducts() : result);
         }
 
         public IEnumerable<StoreItem> GetProductsByKeyword(string keyword)

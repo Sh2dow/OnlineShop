@@ -17,22 +17,12 @@ namespace OnlineShop.Models.ShoppingSvcItem
         {
             PictureURL = new List<string>();
         }
-        [Required, JsonProperty]
-        public string PrimaryCategoryID { get; set; }
-        [JsonProperty]
-        public string ListingType { get; set; }
-        [JsonProperty]
+        [JsonProperty("GalleryURL")]
         public string GalleryURL { get; set; }
         [JsonProperty]
         public List<string> PictureURL { get; set; }
-        [JsonProperty]
-        public string BidCount { get; set; }
-        [JsonProperty]
+        [JsonProperty("ConvertedCurrentPrice")]
         public ConvertedCurrentPrice ConvertedCurrentPrice { get; set; }
-        [JsonProperty]
-        public string TimeLeft { get; set; }
-        [JsonProperty]
-        public string WatchCount { get; set; }
     }
     
     public class ItemArray

@@ -69,7 +69,10 @@ namespace OnlineShop.BL
                 repo.AddProducts(itemsFinal);
                 repo.Save();
             }
-            catch{}
+            catch
+            {
+
+            }
         }
 
         public StoreItem ConvertJsonShoppingSvcToStoreItem(ShoppingItem item)
@@ -82,16 +85,24 @@ namespace OnlineShop.BL
                 ViewItemURLForNaturalSearch = item.ViewItemURLForNaturalSearch,
                 EndTime = item.EndTime,
                 Price = item.ConvertedCurrentPrice.Value,
-                PrimaryCategoryID = long.Parse(item.PrimaryCategoryID),
+                PrimaryCategoryID = item.PrimaryCategoryID,
                 PrimaryCategoryName = item.PrimaryCategoryName,
                 Image = Convert.ToBase64String(LoadBytesFromUrl(item.PictureURL != null && item.PictureURL.Count > 0 ? item.PictureURL[0] : item.GalleryURL))
             };
         }
 
+        /// <summary>
+        /// Downloading and parsing xml with ebay Finding Api to set model with detailed information 
+        /// </summary>
+        /// <param name="localitem"></param>
+        /// <returns></returns>
         public StoreItem ExpandItem(StoreItem localitem)
         {
-            localitem = GrabSingleItem(localitem); //just to fill up description
-            var url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
+            localitem = GrabSingleItem(localitem);
+            //looking for similar items by title
+            string url = FindingApiAddress + "&SECURITY-APPNAME=" + appID +
+                "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" +
+                localitem.Title.Replace("&", " ");
             try
             {
                 XmlDocument doc = new XmlDocument();
@@ -104,8 +115,8 @@ namespace OnlineShop.BL
                     {
                         if (node["listingInfo"]["startTime"] != null && node["sellingStatus"]["convertedCurrentPrice"] != null)
                         {
-                            var date = node["listingInfo"]["startTime"].InnerText;
-                            var price = node["sellingStatus"]["convertedCurrentPrice"].InnerText;
+                            string date = node["listingInfo"]["startTime"].InnerText;
+                            string price = node["sellingStatus"]["convertedCurrentPrice"].InnerText;
 
                             var dprice = double.Parse(price, CultureInfo.InvariantCulture);
                             var priceitem = new DataPoint(date, dprice);
@@ -115,19 +126,23 @@ namespace OnlineShop.BL
                                 localitem.PriceArray = new List<DataPoint>();
                                 localitem.PriceArray.Add(priceitem);
                             }
-                            else if (localitem.PriceArray.Any(x => x.Label != date))
+                            else if (localitem.PriceArray.Any(x => x.X != date))
                             {
                                 localitem.PriceArray.Add(priceitem);
                             }
-                            localitem.PriceArray.Sort((x, nx) => DateTime.Compare(Convert.ToDateTime(x.Label), Convert.ToDateTime(nx.Label)));
+                            //sort price dynamics data by date
+                            localitem.PriceArray.Sort((x, nx) => DateTime.Compare(Convert.ToDateTime(x.X), Convert.ToDateTime(nx.X))); 
                         }
                     }
                 }
                 repo.UpdateProduct(localitem);
                 repo.Save();
+                return localitem;
             }
-            catch{}
-            return localitem;
+            catch
+            {
+                return localitem;
+            }
         }
 
         public static T GetDataFromWebClient<T>(string _url)

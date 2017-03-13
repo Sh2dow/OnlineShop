@@ -18,7 +18,7 @@
                     <!-- /ko -->
                     <!--ko if: headerText == 'Category'-->
                     <td>
-                        <a data-bind="text: $parent.PrimaryCategoryName, attr: {href: '/Home/SaveProducts?param=' + $parent.PrimaryCategoryID}" />
+                        <a data-bind="text: $parent.PrimaryCategoryName, attr: {href: '/Home/SearchItemsByCategory?id=' + $parent.PrimaryCategoryID}" />
                     </td>
                     <!-- /ko -->
                     <!--ko if: headerText == 'Image'-->

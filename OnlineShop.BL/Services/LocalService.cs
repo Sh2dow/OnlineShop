@@ -38,7 +38,7 @@ namespace OnlineShop.BL.Services
             return new GrabService().ExpandItem(item);
         }
 
-        public IEnumerable<StoreItem> GetProductsByCategory(long categoryId)
+        public IEnumerable<StoreItem> GetProductsByCategory(string categoryId)
         {
             return repo.GetProductsByCategory(categoryId);
         }

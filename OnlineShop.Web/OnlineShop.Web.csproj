@@ -323,7 +323,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App\ChartData.js" />
     <Content Include="App\canvasjs.min.js" />
     <Content Include="App\PagedGridModel.js" />
     <Content Include="App\Startup.js" />
@@ -390,7 +389,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Products\Delete.cshtml" />
     <Content Include="Views\Products\Index.cshtml" />
     <Content Include="Views\Products\Details.cshtml" />
   </ItemGroup>

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using OnlineShop.Models;
+﻿using OnlineShop.Models;
+using OnlineShop.Models.ShoppingSvcItem;
 
 namespace OnlineShop.BL.Services.Interfaces
 {
@@ -8,7 +8,9 @@ namespace OnlineShop.BL.Services.Interfaces
         void GrabTopItemsByKeyword(string keyword);
         void GrabTopItemsByCategory(long categoryId);
         void GrabJsonShoppingSvc(string input);
+        StoreItem GrabSingleItem(StoreItem localitem);
         StoreItem ExpandItem(StoreItem localitem);
-        //LocalItem GrabJsonFindingSvc(string input);
+        StoreItem ConvertJsonShoppingSvcToStoreItem(Item item);
+        byte[] LoadBytesFromUrl(string url);
     }
 }

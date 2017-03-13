@@ -17,9 +17,25 @@ namespace OnlineShop.Web.Controllers
 
         // GET: Products
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string param)
         {
-            return View(localService.GetAllProducts());
+            if (string.IsNullOrEmpty(param))
+                return View(localService.GetAllProducts());
+            long parseid;
+            if (long.TryParse(param, out parseid))
+                return View(localService.GetProductsByCategory(param));
+            else
+                return View(localService.GetProductsByKeyword(param));
+        }
+
+        public ActionResult GetItemsByCategory(long? id)
+        {
+            return RedirectToAction("Index", new { param = id });
+        }
+
+        public ActionResult GetProductsByKeyword(string keyword)
+        {
+            return RedirectToAction("Index", new { param = keyword });
         }
 
         // GET: Products/Details/5
@@ -35,12 +51,6 @@ namespace OnlineShop.Web.Controllers
                 return HttpNotFound();
             }
             return View(productView);
-        }
-
-        [ChildActionOnly]
-        public ActionResult ShowDescription(string html)
-        {
-            return PartialView(html);
         }
 
         // GET: Products/Edit/5
