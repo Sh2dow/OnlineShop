@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System;
+using OnlineShop.DL.Context;
 
-namespace OnlineShop.DL
+namespace OnlineShop.DL.Repositories
 {
-    public class ProductsRepository
+    public class ProductsRepository : IProductsRepository
     {
         private ProductContext _db;
 
@@ -23,7 +25,7 @@ namespace OnlineShop.DL
             }
             else
             {
-                _db.Products.Attach(product);
+                //_db.Products.Attach(product);
                 _db.Products.Add(product);
             }
         }
@@ -39,7 +41,7 @@ namespace OnlineShop.DL
             }
         }
 
-        StoreItem Get(StoreItem detachedModel)
+        public StoreItem Get(StoreItem detachedModel)
         {
             using (var context = new ProductContext())
             {
@@ -49,7 +51,6 @@ namespace OnlineShop.DL
 
         public void UpdateProduct(StoreItem product)
         {
-            _db.Products.Attach(product);
             _db.Entry(product).State = EntityState.Modified;
         }
 
@@ -85,6 +86,26 @@ namespace OnlineShop.DL
         public void Save()
         {
             _db.SaveChanges();
+        }
+
+        private bool disposed = false;
+
+        public virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    _db.Dispose();
+                }
+            }
+            this.disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

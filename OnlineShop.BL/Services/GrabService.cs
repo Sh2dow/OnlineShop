@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using OnlineShop.DL;
 using System.Net;
 using Newtonsoft.Json;
 using OnlineShop.BL.Services.Interfaces;
@@ -12,21 +11,23 @@ using System.Xml;
 using HtmlAgilityPack;
 using System.Linq;
 using System.Globalization;
+using OnlineShop.DL.Repositories;
 
 namespace OnlineShop.BL
 {
     public class GrabService : IGrabService
     {
-        private ProductsRepository repo;
-        string appID;
-        string FindingApiAddress;
-        string ShoppingApiAddress;
+        private IProductsRepository repo;
+        string appID = ConfigurationManager.AppSettings["AppID"];
+        string FindingApiAddress = ConfigurationManager.AppSettings["FindingApiAddress"];
+        string ShoppingApiAddress = ConfigurationManager.AppSettings["ShoppingApiAddress"];
 
+        public GrabService(IProductsRepository r)
+        {
+            repo = r;
+        }
         public GrabService()
         {
-            appID = ConfigurationManager.AppSettings["AppID"];
-            FindingApiAddress = ConfigurationManager.AppSettings["FindingApiAddress"];
-            ShoppingApiAddress = ConfigurationManager.AppSettings["ShoppingApiAddress"];
             repo = new ProductsRepository();
         }
 
@@ -131,7 +132,7 @@ namespace OnlineShop.BL
                                 localitem.PriceArray.Add(priceitem);
                             }
                             //sort price dynamics data by date
-                            localitem.PriceArray.Sort((x, nx) => DateTime.Compare(Convert.ToDateTime(x.X), Convert.ToDateTime(nx.X))); 
+                            localitem.PriceArray.Sort((x, nx) => DateTime.Compare(Convert.ToDateTime(x.X), Convert.ToDateTime(nx.X)));
                         }
                     }
                 }

@@ -3,6 +3,9 @@ using System.Web.Mvc;
 using OnlineShop.Models;
 using OnlineShop.BL.Services;
 using OnlineShop.BL.Services.Interfaces;
+using OnlineShop.DL.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OnlineShop.Web.Controllers
 {
@@ -15,17 +18,28 @@ namespace OnlineShop.Web.Controllers
             localService = new LocalService();
         }
 
+        public ProductsController(ILocalService l)
+        {
+            localService = l;
+        }
+
         // GET: Products
         [HttpGet]
-        public ActionResult Index(string param)
+        public ActionResult Index(string param = "")
         {
+            IEnumerable<StoreItem> model;
             if (string.IsNullOrEmpty(param))
-                return View(localService.GetAllProducts());
+            {
+                model = localService.GetAllProducts();
+                if (model.Count() > 0)
+                    ViewBag.Message = string.Format("There's {0} object in the db", model.Count());
+            }
             long parseid;
             if (long.TryParse(param, out parseid))
-                return View(localService.GetProductsByCategory(param));
+                model = localService.GetProductsByCategory(param);
             else
-                return View(localService.GetProductsByKeyword(param));
+                model = localService.GetProductsByKeyword(param);
+            return View(model);
         }
 
         public ActionResult GetItemsByCategory(long? id)

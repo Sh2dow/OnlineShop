@@ -1,15 +1,18 @@
 ﻿using System.Collections.Generic;
 using OnlineShop.Models;
-using OnlineShop.DL;
+using OnlineShop.DL.Repositories;
 using OnlineShop.BL.Services.Interfaces;
-using System;
 
 namespace OnlineShop.BL.Services
 {
     public class LocalService : ILocalService
     {
-        private ProductsRepository repo;
+        private IProductsRepository repo;
 
+        public LocalService(IProductsRepository r)
+        {
+            repo = r;
+        }
         public LocalService()
         {
             repo = new ProductsRepository();
