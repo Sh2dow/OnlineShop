@@ -11,6 +11,8 @@ namespace OnlineShop.DL.Repositories
     {
         private ProductContext _db;
 
+        public Exception ExceptionToThrow { get; set; }
+
         public ProductsRepository()
         {
             _db = new ProductContext();
@@ -38,14 +40,6 @@ namespace OnlineShop.DL.Repositories
                 {
                     AddProduct(product);
                 }
-            }
-        }
-
-        public StoreItem Get(StoreItem detachedModel)
-        {
-            using (var context = new ProductContext())
-            {
-                return context.Products.Single(x => x.ItemID == detachedModel.ItemID);
             }
         }
 

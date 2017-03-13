@@ -6,6 +6,9 @@ using Moq;
 using OnlineShop.DL.Repositories;
 using System.Collections.Generic;
 using OnlineShop.BL.Services.Interfaces;
+using System;
+using System.Net;
+using OnlineShop.BL.Services;
 
 namespace OnlineShopTests.Controllers
 {
@@ -28,12 +31,26 @@ namespace OnlineShopTests.Controllers
         public void SearchItemsByCategory()
         {
             // Arrange
+            var mock = new Mock<IGrabService>();
+            var categoryId = "0";
+            HomeController controller = new HomeController(mock.Object);
+            // act
+            RedirectToRouteResult result = controller.SearchItemsByCategory(categoryId) as RedirectToRouteResult;
+            // assert
+            mock.Verify(a => a.GrabTopItemsByCategory(categoryId));
         }
 
         [TestMethod]
         public void SearchItemsByKeyword()
         {
             // Arrange
+            var mock = new Mock<IGrabService>();
+            var keyword = "iphone";
+            HomeController controller = new HomeController(mock.Object);
+            // act
+            RedirectToRouteResult result = controller.SearchItemsByKeyword(keyword) as RedirectToRouteResult;
+            // assert
+            mock.Verify(a => a.GrabTopItemsByKeyword(keyword));
         }
     }
 
@@ -84,115 +101,118 @@ namespace OnlineShopTests.Controllers
         }
 
         [TestMethod]
-        public void TestDetailsView()
+        public void DetailsViewModelNotNull()
         {
-            var controller = new ProductsController();
-            var result = controller.Details("2") as ViewResult;
-            Assert.AreEqual("Details", result.ViewName);
+            // Arrange
+            var mock = new Mock<ILocalService>();
+            var id = "1";
+            mock.Setup(a => a.GetProductById(id)).Returns(new StoreItem());
+            ProductsController controller = new ProductsController(mock.Object);
+            // Act
+            ViewResult result = controller.Details(id) as ViewResult;
+            // Assert
+            Assert.IsNotNull(result.Model);
         }
 
         [TestMethod]
-        public void TestDetailsViewData()
+        public void Details_Verify()
         {
-            var controller = new ProductsController();
-            var result = controller.Details("2") as ViewResult;
-            var product = (StoreItem)result.ViewData.Model;
-            Assert.AreEqual("Laptop", product.Title);
+            // arrange
+            var mock = new Mock<ILocalService>();
+            const string id = "111242493709";
+            ProductsController controller = new ProductsController(mock.Object);
+            // act
+            RedirectToRouteResult result = controller.Details(id) as RedirectToRouteResult;
+            // assert
+            mock.Verify(a => a.GetProductById(id));
         }
 
         [TestMethod]
-        public void TestDetailsRedirect()
+        public void GetProductFromRepository()
         {
-            var controller = new ProductsController();
-            var result = (RedirectToRouteResult)controller.Details("-1");
-            Assert.AreEqual("Index", result.RouteValues["action"]);
-
+            const string id = "111242493709";
+            var mock = new Mock<IProductsRepository>();
+            mock.Setup(x => x.GetProductById(id)).Returns(new StoreItem());
+            var repository = mock.Object;
+            var service = new LocalService(repository);
+            var result = service.GetProductById(id);
+            Assert.IsNotNull(result);
         }
 
-        //[TestMethod]
-        //public void Index_Get_RetrievesAllItemsFromRepository()
-        //{
-        //    // Arrange
-        //    StoreItem contact1 = GetContactNamed(1, "Orlando", "Gee");
-        //    StoreItem contact2 = GetContactNamed(2, "Keith", "Harris");
-        //    GrabService grabservice = new InMemoryContactRepository();
-        //    repository.Add(contact1);
-        //    repository.Add(contact2);
-        //    var controller = GetHomeController(repository);
 
-        //    // Act
-        //    var result = controller.Index();
 
-        //    // Assert
-        //    var model = (IEnumerable<Contact>)result.ViewData.Model;
-        //    CollectionAssert.Contains(model.ToList(), contact1);
-        //    CollectionAssert.Contains(model.ToList(), contact1);
-        //}
-    }
+        /// <summary>
+        /// Instance of a controller for testing things that use controller methods i.e. controller.TryValidateModel(model)
+        /// </summary>
+        public class ModelStateTestController : Controller
+        {
+            public ModelStateTestController()
+            {
+                ControllerContext = (new Mock<ControllerContext>()).Object;
+            }
 
-    /*  [TestClass]
-      public class UnitTest1
-      {
-          [TestMethod]
-          public void GetAllProducts_ShouldReturnAllProducts()
-          {
-              var testProducts = GetTestProducts();
-              var controller = new ProductsController(testProducts);
+            public bool TestTryValidateModel(object model)
+            {
+                return TryValidateModel(model);
+            }
+        }
 
-              var result = controller.GetAllProducts() as List<StoreItem>;
-              Assert.AreEqual(testProducts.Count, result.Count);
-          }
+        [TestMethod]
+        public void ModelState_validations_are_thrown()
+        {
+            // Arrange
+            var controller = new ModelStateTestController();
+            var testitem = new StoreItem
+            {
+                ItemID = null, //This is a required property and so this value is invalid
+                PrimaryCategoryID = null //This is a required property and so this value is invalid
+            };
 
-          [TestMethod]
-          public async Task GetAllProductsAsync_ShouldReturnAllProducts()
-          {
-              var testProducts = GetTestProducts();
-              var controller = new SimpleProductController(testProducts);
+            // Act
+            var result = controller.TestTryValidateModel(testitem);
 
-              var result = await controller.GetAllProductsAsync() as List<StoreItem>;
-              Assert.AreEqual(testProducts.Count, result.Count);
-          }
+            // Assert
+            Assert.IsFalse(result);
 
-          [TestMethod]
-          public void GetProduct_ShouldReturnCorrectProduct()
-          {
-              var testProducts = GetTestProducts();
-              var controller = new SimpleProductController(testProducts);
+            var modelState = controller.ModelState;
 
-              var result = controller.GetProduct(4) as OkNegotiatedContentResult<StoreItem>;
-              Assert.IsNotNull(result);
-              Assert.AreEqual(testProducts[3].Name, result.Content.Name);
-          }
+            Assert.AreEqual(2, modelState.Keys.Count);
 
-          [TestMethod]
-          public async Task GetProductAsync_ShouldReturnCorrectProduct()
-          {
-              var testProducts = GetTestProducts();
-              var controller = new SimpleProductController(testProducts);
+            Assert.IsTrue(modelState.Keys.Contains("ItemID"));
+            Assert.IsTrue(modelState["ItemID"].Errors.Count == 1);
+            Assert.AreEqual("Требуется поле id.", modelState["ItemID"].Errors[0].ErrorMessage);
 
-              var result = await controller.GetProductAsync(4) as OkNegotiatedContentResult<Product>;
-              Assert.IsNotNull(result);
-              Assert.AreEqual(testProducts[3].Name, result.Content.Name);
-          }
+            Assert.IsTrue(modelState.Keys.Contains("PrimaryCategoryID"));
+            Assert.IsTrue(modelState["PrimaryCategoryID"].Errors.Count == 1);
+            Assert.AreEqual("Требуется поле PrimaryCategoryID.", modelState["PrimaryCategoryID"].Errors[0].ErrorMessage);
+        }
 
-          [TestMethod]
-          public void GetProduct_ShouldNotFindProduct()
-          {
-              var controller = new SimpleProductController(GetTestProducts());
+        [TestMethod]
+        public void RepositoryThrowsException()
+        {
+            // Arrange
+            var testrepo = new ProductsRepository();
+            Exception exception = new Exception();
+            testrepo.ExceptionToThrow = exception;
+            var controller = new ProductsController(new LocalService(testrepo));
+            var grabsvc = new Mock<IGrabService>();
+            var testitem = GetTestItem();
+            var result = (ViewResult)controller.Details(testitem.ItemID);
+            Assert.AreEqual("", result.ViewName);
+            ModelState modelState = result.ViewData.ModelState[""];
+        }
 
-              var result = controller.GetProduct(999);
-              Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-          }
+        StoreItem GetTestItem()
+        {
+            return new StoreItem()
+            {
+                ItemID = "111242493709",
+                PrimaryCategoryID = "37943",
+                Price = 7.99,
+                EndTime = Convert.ToDateTime("2017-04-08T05:02:21.000Z"),
+                Title = "Wooden Box Handmade Trinket Storage Keepsake Jewelry Name Card Holder Gift"
+            };
+        }
 
-          private List<StoreItem> GetTestProducts()
-          {
-              var testProducts = new List<Product>();
-              testProducts.Add(new Product { Id = 1, Name = "Demo1", Price = 1 });
-              testProducts.Add(new Product { Id = 2, Name = "Demo2", Price = 3.75M });
-              testProducts.Add(new Product { Id = 3, Name = "Demo3", Price = 16.99M });
-              testProducts.Add(new Product { Id = 4, Name = "Demo4", Price = 11.00M });
-
-              return testProducts;
-      }
-          }*/
+       
 }

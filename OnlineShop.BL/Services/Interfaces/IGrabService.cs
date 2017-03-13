@@ -6,7 +6,7 @@ namespace OnlineShop.BL.Services.Interfaces
     public interface IGrabService
     {
         void GrabTopItemsByKeyword(string keyword);
-        void GrabTopItemsByCategory(long categoryId);
+        void GrabTopItemsByCategory(string categoryId);
         void GrabJsonShoppingSvc(string input);
         StoreItem GrabSingleItem(StoreItem localitem);
         StoreItem ExpandItem(StoreItem localitem);

@@ -36,7 +36,7 @@ namespace OnlineShop.BL
             GrabJsonShoppingSvc("FindPopularItems&QueryKeywords=" + keyword);
         }
 
-        public void GrabTopItemsByCategory(long id)
+        public void GrabTopItemsByCategory(string id)
         {
             GrabJsonShoppingSvc("FindPopularItems&categoryId=" + id.ToString());
         }
@@ -57,23 +57,16 @@ namespace OnlineShop.BL
         public void GrabJsonShoppingSvc(string input)
         {
             var url = ShoppingApiAddress + "&callname=" + input + "&ResponseEncodingType=JSON&appid=" + appID;
-            try
+            var arr = GetDataFromWebClient<Models.ShoppingSvcItem.Json>(url);
+            var items = arr.ItemArray.Items;
+            var itemsFinal = new List<StoreItem>();
+            foreach (var item in items)
             {
-                var arr = GetDataFromWebClient<Models.ShoppingSvcItem.Json>(url);
-                var items = arr.ItemArray.Items;
-                var itemsFinal = new List<StoreItem>();
-                foreach (var item in items)
-                {
-                    if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
-                        itemsFinal.Add(ConvertJsonShoppingSvcToStoreItem(item));
-                }
-                repo.AddProducts(itemsFinal);
-                repo.Save();
+                if (itemsFinal.FindAll(x => x.ItemID == item.ItemID).Count < 1) //Sometimes there are items with duplicate PK
+                    itemsFinal.Add(ConvertJsonShoppingSvcToStoreItem(item));
             }
-            catch
-            {
-
-            }
+            repo.AddProducts(itemsFinal);
+            repo.Save();
         }
 
         public StoreItem ConvertJsonShoppingSvcToStoreItem(ShoppingItem item)

@@ -13,6 +13,7 @@ namespace OnlineShop.BL.Services
         {
             repo = r;
         }
+
         public LocalService()
         {
             repo = new ProductsRepository();
@@ -38,7 +39,8 @@ namespace OnlineShop.BL.Services
         public StoreItem GetProductById(string productId)
         {
             var item = repo.GetProductById(productId);
-            return new GrabService().ExpandItem(item);
+            var grab = new GrabService();
+            return grab.ExpandItem(item);
         }
 
         public IEnumerable<StoreItem> GetProductsByCategory(string categoryId)

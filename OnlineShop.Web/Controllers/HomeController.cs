@@ -9,6 +9,11 @@ namespace OnlineShop.Web.Controllers
     {
         private IGrabService grabService;
 
+        public HomeController(IGrabService g)
+        {
+            grabService = g;
+        }
+
         public HomeController()
         {
             grabService = new GrabService();
@@ -20,13 +25,13 @@ namespace OnlineShop.Web.Controllers
         }
 
         [HttpGet]
-        public ActionResult SearchItemsByCategory(long? id)
+        public ActionResult SearchItemsByCategory(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            grabService.GrabTopItemsByCategory((long)id);
+            grabService.GrabTopItemsByCategory(id);
             return RedirectToAction("GetItemsByCategory", "Products", new { id });
         }
 
