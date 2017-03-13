@@ -12,6 +12,7 @@ using HtmlAgilityPack;
 using System.Linq;
 using System.Globalization;
 using OnlineShop.DL.Repositories;
+using System.Text.RegularExpressions;
 
 namespace OnlineShop.BL
 {
@@ -93,8 +94,12 @@ namespace OnlineShop.BL
         public StoreItem ExpandItem(StoreItem localitem)
         {
             localitem = GrabSingleItem(localitem);
+
+            var r2 = new Regex(@"[\%\/\\\&\?\,\'\;\:\!\-]+");
             //looking for similar items by title
-            string url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
+            string url = FindingApiAddress + "&SECURITY-APPNAME=" + appID +
+                "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" +
+                localitem.Title.Replace("&", " ");
             try
             {
                 XmlDocument doc = new XmlDocument();

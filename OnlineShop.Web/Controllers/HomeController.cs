@@ -38,9 +38,9 @@ namespace OnlineShop.Web.Controllers
         [HttpGet]
         public ActionResult SearchItemsByKeyword(string keyword)
         {
-            if (keyword == null)
+            if (string.IsNullOrEmpty(keyword))
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("GetProductsByKeyword", "Products");
             }
             grabService.GrabTopItemsByKeyword(keyword);
             return RedirectToAction("GetProductsByKeyword", "Products", new { keyword });
