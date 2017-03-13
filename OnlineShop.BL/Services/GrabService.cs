@@ -94,9 +94,7 @@ namespace OnlineShop.BL
         {
             localitem = GrabSingleItem(localitem);
             //looking for similar items by title
-            string url = FindingApiAddress + "&SECURITY-APPNAME=" + appID +
-                "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" +
-                localitem.Title.Replace("&", " ");
+            string url = FindingApiAddress + "&SECURITY-APPNAME=" + appID + "&outputSelector=PictureURLLarge&sortOrder=startTime&RESPONSE-DATA-FORMAT=xml&callname=OPERATION-NAME=findItemsByKeywords&keywords=" + localitem.Title.Replace("&", " ");
             try
             {
                 XmlDocument doc = new XmlDocument();

@@ -7,7 +7,6 @@ using OnlineShop.DL.Repositories;
 using System.Collections.Generic;
 using OnlineShop.BL.Services.Interfaces;
 using System;
-using System.Net;
 using OnlineShop.BL.Services;
 
 namespace OnlineShopTests.Controllers
@@ -132,14 +131,12 @@ namespace OnlineShopTests.Controllers
         {
             const string id = "111242493709";
             var mock = new Mock<IProductsRepository>();
-            mock.Setup(x => x.GetProductById(id)).Returns(new StoreItem());
+            mock.Setup(x => x.GetProductById(id)).Returns(GetTestItem());
             var repository = mock.Object;
             var service = new LocalService(repository);
             var result = service.GetProductById(id);
             Assert.IsNotNull(result);
         }
-
-
 
         /// <summary>
         /// Instance of a controller for testing things that use controller methods i.e. controller.TryValidateModel(model)
@@ -214,5 +211,5 @@ namespace OnlineShopTests.Controllers
             };
         }
 
-       
+    }
 }
